@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1976d2">
+<title>Сканер серийных номеров</title>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f2f4f7;color:#1f2937}.app{max-width:620px;margin:auto}h1{text-align:center;font-size:25px;margin:7px 0 14px}#reader{width:100%;background:#000;border-radius:14px;overflow:hidden}.status{margin-top:12px;padding:17px;border-radius:14px;background:#fff;text-align:center;font-size:19px;line-height:1.35;min-height:78px;display:flex;align-items:center;justify-content:center}.success{background:#e8f7ed;color:#137333;font-weight:700}.duplicate{background:#fff4d6;color:#8a5a00;font-weight:700}.error{background:#fdeaea;color:#b42318;font-weight:700}.info{color:#374151}button{width:100%;margin-top:12px;padding:15px;border:0;border-radius:12px;font-size:18px;font-weight:600;background:#1976d2;color:#fff}button:disabled{opacity:.55}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.card{background:#fff;border-radius:12px;padding:13px;text-align:center}.card .num{display:block;font-size:25px;font-weight:700;margin-top:3px}.last{margin-top:10px;padding:12px;background:#fff;border-radius:12px;text-align:center;font-size:18px;font-weight:700;word-break:break-word}.hint{margin-top:10px;text-align:center;color:#6b7280;font-size:13px}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>Сканер серийных номеров</h1>
+<div id="reader"></div>
+<div id="status" class="status info">Нажмите «Начать сканирование» и разрешите доступ к камере.</div>
+<button id="startBtn" onclick="startScanner()">📷 Начать сканирование</button>
+<div class="stats">
+<div class="card">Добавлено<span class="num" id="count">0</span></div>
+<div class="card">Повторов<span class="num" id="dupes">0</span></div>
+</div>
+<div class="last" id="last">Последний номер: —</div>
+<div class="hint">Камера остаётся включённой. После успешного сканирования следующий QR можно показывать сразу.</div>
+</div>
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbwuD_FaqyWU_jmsh-Hzkj5JejyovE4xJ_3HRuzViRoJgA3GIu6fAdTurJBFvn_ygc7uAA/exec";
+let scanner=null,scanning=false,processing=false,count=0,dupes=0,lastAcceptedSerial="",lastAcceptedAt=0,audioContext=null;
+const statusEl=document.getElementById("status"),startBtn=document.getElementById("startBtn"),countEl=document.getElementById("count"),dupesEl=document.getElementById("dupes"),lastEl=document.getElementById("last");
+function esc(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function setStatus(html,cls){statusEl.className="status "+cls;statusEl.innerHTML=html}
+function extractSerial(text){
+ const raw=String(text||"").trim().replace(/\s+/g," ");
+ const m=raw.match(/\bSN\s*[:#-]?\s*([A-Za-z0-9_-]+)/i);
+ if(m)return "SN "+m[1];
+ return raw;
+}
+function beep(ok){
+ try{
+  if(!audioContext)audioContext=new(window.AudioContext||window.webkitAudioContext)();
+  if(audioContext.state==="suspended")audioContext.resume();
+  const osc=audioContext.createOscillator(),gain=audioContext.createGain();
+  osc.connect(gain);gain.connect(audioContext.destination);osc.frequency.value=ok?880:330;osc.type="sine";
+  const now=audioContext.currentTime;gain.gain.setValueAtTime(.001,now);gain.gain.exponentialRampToValueAtTime(.18,now+.01);gain.gain.exponentialRampToValueAtTime(.001,now+(ok?.13:.25));osc.start(now);osc.stop(now+(ok?.14:.26));
+ }catch(e){}
+}
+function startScanner(){
+ if(scanning)return;
+ startBtn.disabled=true;processing=false;
+ try{audioContext=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}
+ setStatus("Запрашиваем доступ к камере…","info");
+ scanner=new Html5Qrcode("reader");scanning=true;
+ scanner.start({facingMode:"environment"},{fps:10,qrbox:function(w,h){const s=Math.floor(Math.min(w,h)*.68);return{width:Math.max(180,s),height:Math.max(180,s)}},aspectRatio:1},onScanSuccess,function(){})
+ .then(function(){setStatus("Наведите камеру на QR-код","info")})
+ .catch(function(e){scanning=false;startBtn.disabled=false;setStatus("❌ Не удалось открыть камеру<br><small>"+esc(e)+"</small>","error")});
+}
+function onScanSuccess(decodedText){
+ if(processing)return;
+ const serial=extractSerial(decodedText);if(!serial)return;
+ const now=Date.now();
+ if(serial===lastAcceptedSerial&&(now-lastAcceptedAt)<3000)return;
+ processing=true;lastAcceptedSerial=serial;lastAcceptedAt=now;
+ setStatus("⏳ Сохраняем<br><b>"+esc(serial)+"</b>","info");
+ saveViaJsonp(serial);
+}
+function saveViaJsonp(serial){
+ const cb="qrCallback_"+Date.now()+"_"+Math.floor(Math.random()*100000),script=document.createElement("script");
+ const timeout=setTimeout(function(){cleanup();processing=false;setStatus("❌ Нет ответа от Google Sheets.<br>Проверьте интернет.","error");startBtn.disabled=false;beep(false)},15000);
+ window[cb]=function(r){
+  clearTimeout(timeout);cleanup();
+  if(r&&r.success){
+   count++;countEl.textContent=count;lastEl.textContent="Последний номер: "+r.serial;
+   setStatus('<span><span class="okmark">🟢</span> ДОБАВЛЕНО<br><b>'+esc(r.serial)+'</b></span>','success');beep(true);
+   setTimeout(function(){processing=false;setStatus("Наведите на следующий QR-код","info")},700);
+  }else if(r&&r.duplicate){
+   dupes++;dupesEl.textContent=dupes;lastEl.textContent="Повтор: "+r.serial;
+   setStatus("⚠️ УЖЕ ЕСТЬ В ТАБЛИЦЕ<br><b>"+esc(r.serial)+"</b><br><small>"+esc(r.message||"")+"</small>","duplicate");beep(false);
+   setTimeout(function(){processing=false;setStatus("Наведите на следующий QR-код","info")},1200);
+  }else{
+   setStatus("❌ Ошибка<br><small>"+esc((r&&r.message)||"Неизвестная ошибка")+"</small>","error");beep(false);processing=false;startBtn.disabled=false;
+  }
+ };
+ script.onerror=function(){clearTimeout(timeout);cleanup();processing=false;startBtn.disabled=false;setStatus("❌ Не удалось связаться с Google Sheets.","error");beep(false)};
+ script.src=API_URL+"?action=save&serial="+encodeURIComponent(serial)+"&callback="+encodeURIComponent(cb)+"&t="+Date.now();
+ document.body.appendChild(script);
+ function cleanup(){delete window[cb];if(script.parentNode)script.parentNode.removeChild(script)}
+}
+</script>
+</body>
+</html>
