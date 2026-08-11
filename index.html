@@ -1,1678 +1,1902 @@
+```html
 <!doctype html>
 <html lang="ru">
-
 <head>
-
-<meta charset="utf-8">
-
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-<meta name="theme-color"
-      content="#1976d2">
-
-<title>Сканер серийных номеров</title>
-
-<script
-  src="https://unpkg.com/html5-qrcode"
-  type="text/javascript">
-</script>
-
-<style>
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 16px;
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-  background: #f2f4f7;
-  color: #1f2937;
-}
-
-.app {
-  max-width: 620px;
-  margin: auto;
-}
-
-h1 {
-  text-align: center;
-  font-size: 25px;
-  margin: 7px 0 14px;
-}
-
-
-/* PIN */
-
-.pin-screen {
-
-  min-height: 100vh;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-}
-
-.pin-box {
-
-  width: min(92vw, 420px);
-
-  background: #fff;
-
-  border-radius: 18px;
-
-  padding: 28px;
-
-  box-shadow:
-    0 4px 24px rgba(0,0,0,.10);
-
-  text-align: center;
-}
-
-.pin-title {
-
-  font-size: 23px;
-
-  font-weight: 700;
-
-  margin-bottom: 8px;
-}
-
-.pin-subtitle {
-
-  color: #6b7280;
-
-  margin-bottom: 18px;
-}
-
-.pin-input {
-
-  width: 100%;
-
-  padding: 15px;
-
-  border:
-    1px solid #d1d5db;
-
-  border-radius: 12px;
-
-  font-size: 24px;
-
-  text-align: center;
-
-  letter-spacing: 5px;
-
-  outline: none;
-}
-
-.pin-input:focus {
-
-  border-color: #1976d2;
-}
-
-.pin-button {
-
-  margin-top: 12px;
-}
-
-.pin-error {
-
-  min-height: 22px;
-
-  margin-top: 10px;
-
-  color: #b42318;
-
-  font-size: 14px;
-}
-
-
-/* executor */
-
-.setup-box {
-
-  background: #fff;
-
-  border-radius: 16px;
-
-  padding: 20px;
-
-  margin-bottom: 12px;
-
-  box-shadow:
-    0 2px 10px rgba(0,0,0,.05);
-}
-
-label {
-
-  display: block;
-
-  font-weight: 600;
-
-  margin-bottom: 7px;
-}
-
-input,
-select {
-
-  width: 100%;
-
-  padding: 14px;
-
-  border:
-    1px solid #d1d5db;
-
-  border-radius: 12px;
-
-  font-size: 17px;
-
-  background: #fff;
-}
-
-select {
-
-  margin-bottom: 12px;
-}
-
-
-/* scanner */
-
-#reader {
-
-  width: 100%;
-
-  background: #000;
-
-  border-radius: 14px;
-
-  overflow: hidden;
-}
-
-
-/* status */
-
-.status {
-
-  margin-top: 12px;
-
-  padding: 17px;
-
-  border-radius: 14px;
-
-  background: #fff;
-
-  text-align: center;
-
-  font-size: 19px;
-
-  line-height: 1.35;
-
-  min-height: 78px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-}
-
-.success {
-
-  background: #e8f7ed;
-
-  color: #137333;
-
-  font-weight: 700;
-}
-
-.duplicate {
-
-  background: #fff4d6;
-
-  color: #8a5a00;
-
-  font-weight: 700;
-}
-
-.error {
-
-  background: #fdeaea;
-
-  color: #b42318;
-
-  font-weight: 700;
-}
-
-.info {
-
-  color: #374151;
-}
-
-
-/* buttons */
-
-button {
-
-  width: 100%;
-
-  margin-top: 12px;
-
-  padding: 15px;
-
-  border: 0;
-
-  border-radius: 12px;
-
-  font-size: 18px;
-
-  font-weight: 600;
-
-  background: #1976d2;
-
-  color: #fff;
-}
-
-button:disabled {
-
-  opacity: .55;
-}
-
-.secondary {
-
-  background: #6b7280;
-}
-
-
-/* stats */
-
-.stats {
-
-  display: grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
-  gap: 10px;
-
-  margin-top: 12px;
-}
-
-.card {
-
-  background: #fff;
-
-  border-radius: 12px;
-
-  padding: 13px;
-
-  text-align: center;
-}
-
-.card .num {
-
-  display: block;
-
-  font-size: 25px;
-
-  font-weight: 700;
-
-  margin-top: 3px;
-}
-
-.last {
-
-  margin-top: 10px;
-
-  padding: 12px;
-
-  background: #fff;
-
-  border-radius: 12px;
-
-  text-align: center;
-
-  font-size: 18px;
-
-  font-weight: 700;
-
-  word-break: break-word;
-}
-
-.info-panel {
-
-  margin-top: 10px;
-
-  padding: 12px;
-
-  background: #fff;
-
-  border-radius: 12px;
-
-  text-align: center;
-
-  font-size: 15px;
-
-  color: #4b5563;
-}
-
-.limit {
-
-  color: #b42318;
-
-  font-weight: 700;
-}
-
-.hint {
-
-  margin-top: 10px;
-
-  text-align: center;
-
-  color: #6b7280;
-
-  font-size: 13px;
-}
-
-.hidden {
-
-  display: none !important;
-}
-
-</style>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#1976d2">
+
+  <title>Сканер серийных номеров</title>
+
+  <script
+    src="https://unpkg.com/html5-qrcode"
+    type="text/javascript">
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+      background: #f2f4f7;
+      color: #1f2937;
+    }
+
+    .app {
+      max-width: 620px;
+      margin: auto;
+    }
+
+    /* =========================
+       PIN
+       ========================= */
+
+    .pin-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pin-box {
+      width: min(92vw, 420px);
+      background: #fff;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.10);
+      text-align: center;
+    }
+
+    .pin-title {
+      font-size: 23px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .pin-subtitle {
+      color: #6b7280;
+      margin-bottom: 18px;
+    }
+
+    .pin-input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 24px;
+      text-align: center;
+      letter-spacing: 5px;
+      outline: none;
+    }
+
+    .pin-input:focus {
+      border-color: #1976d2;
+    }
+
+    .pin-button {
+      margin-top: 12px;
+    }
+
+    .pin-error {
+      min-height: 22px;
+      margin-top: 10px;
+      color: #b42318;
+      font-size: 14px;
+    }
+
+    /* =========================
+       SETUP
+       ========================= */
+
+    .setup-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .setup-box {
+      width: min(92vw, 500px);
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.10);
+    }
+
+    .setup-title {
+      text-align: center;
+      font-size: 23px;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 17px;
+      background: #fff;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: #1976d2;
+    }
+
+    .session-info {
+      background: #eef5ff;
+      border-radius: 12px;
+      padding: 13px;
+      margin-top: 15px;
+      text-align: center;
+      color: #24527a;
+      line-height: 1.5;
+    }
+
+    /* =========================
+       MAIN
+       ========================= */
+
+    h1 {
+      text-align: center;
+      font-size: 25px;
+      margin: 7px 0 6px;
+    }
+
+    .executor-info {
+      background: #fff;
+      border-radius: 12px;
+      padding: 11px;
+      text-align: center;
+      font-size: 14px;
+      color: #4b5563;
+      margin-bottom: 12px;
+    }
+
+    #reader {
+      width: 100%;
+      background: #000;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .status {
+      margin-top: 12px;
+      padding: 17px;
+      border-radius: 14px;
+      background: #fff;
+      text-align: center;
+      font-size: 19px;
+      line-height: 1.35;
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success {
+      background: #e8f7ed;
+      color: #137333;
+      font-weight: 700;
+    }
+
+    .duplicate {
+      background: #fff4d6;
+      color: #8a5a00;
+      font-weight: 700;
+    }
+
+    .error {
+      background: #fdeaea;
+      color: #b42318;
+      font-weight: 700;
+    }
+
+    .warning {
+      background: #fff0d6;
+      color: #8a4b00;
+      font-weight: 700;
+    }
+
+    .info {
+      color: #374151;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 15px;
+      border: 0;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      background: #1976d2;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .secondary-button {
+      background: #6b7280;
+    }
+
+    .danger-button {
+      background: #b42318;
+    }
+
+    /* =========================
+       STATS
+       ========================= */
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 13px;
+      text-align: center;
+    }
+
+    .card .num {
+      display: block;
+      font-size: 25px;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .limit-card {
+      grid-column: 1 / -1;
+    }
+
+    .progress {
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 20px;
+      margin-top: 9px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #1976d2;
+      transition: width .2s;
+    }
+
+    .last {
+      margin-top: 10px;
+      padding: 12px;
+      background: #fff;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .hint {
+      margin-top: 10px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
 </head>
-
 
 <body>
 
+  <!-- =====================================================
+       PIN SCREEN
+       ===================================================== -->
 
-<!-- PIN -->
+  <div id="pinScreen" class="pin-screen">
 
-<div id="pinScreen"
-     class="pin-screen">
+    <div class="pin-box">
 
-  <div class="pin-box">
+      <div class="pin-title">
+        🔐 Доступ к сканеру
+      </div>
 
-    <div class="pin-title">
-      🔐 Доступ к сканеру
+      <div class="pin-subtitle">
+        Введите PIN-код
+      </div>
+
+      <input
+        id="pinInput"
+        class="pin-input"
+        type="password"
+        inputmode="numeric"
+        maxlength="8"
+        autocomplete="off"
+        placeholder="••••••••"
+      >
+
+      <button
+        class="pin-button"
+        onclick="checkPin()">
+        Войти
+      </button>
+
+      <div
+        id="pinError"
+        class="pin-error">
+      </div>
+
     </div>
 
-    <div class="pin-subtitle">
-      Введите PIN-код
+  </div>
+
+
+  <!-- =====================================================
+       SETUP SCREEN
+       ===================================================== -->
+
+  <div
+    id="setupScreen"
+    class="setup-screen hidden">
+
+    <div class="setup-box">
+
+      <div class="setup-title">
+        👤 Данные исполнителя
+      </div>
+
+      <div class="field">
+
+        <label for="executorInput">
+          Имя и фамилия исполнителя
+        </label>
+
+        <input
+          id="executorInput"
+          type="text"
+          autocomplete="name"
+          placeholder="Например: Иван Иванов"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="duSelect">
+          ДУ прибора
+        </label>
+
+        <select id="duSelect">
+
+          <option value="">
+            — Выберите ДУ —
+          </option>
+
+          <option value="DN15 Modbus">
+            DN15 Modbus
+          </option>
+
+          <option value="DN15 LoraWan">
+            DN15 LoraWan
+          </option>
+
+          <option value="DN20 Modbus">
+            DN20 Modbus
+          </option>
+
+          <option value="DN20 LoraWan">
+            DN20 LoraWan
+          </option>
+
+          <option value="DN25 BR">
+            DN25 BR
+          </option>
+
+          <option value="DN32 BR">
+            DN32 BR
+          </option>
+
+          <option value="DN40 BR">
+            DN40 BR
+          </option>
+
+          <option value="DN50 BR">
+            DN50 BR
+          </option>
+
+          <option value="DN50 CLI">
+            DN50 CLI
+          </option>
+
+          <option value="DN80 CLI">
+            DN80 CLI
+          </option>
+
+          <option value="DN100 CLI">
+            DN100 CLI
+          </option>
+
+          <option value="DN150 CLI">
+            DN150 CLI
+          </option>
+
+          <option value="DN200 CLI">
+            DN200 CLI
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <button
+        id="beginSessionBtn"
+        onclick="beginSession()">
+
+        ▶️ Начать сеанс
+
+      </button>
+
+
+      <div
+        id="setupStatus"
+        class="session-info hidden">
+      </div>
+
     </div>
 
-    <input
-      id="pinInput"
-      class="pin-input"
-      type="password"
-      inputmode="numeric"
-      maxlength="8"
-      autocomplete="off"
-      placeholder="••••••••">
+  </div>
 
-    <button
-      class="pin-button"
-      onclick="checkPin()">
-      Войти
-    </button>
+
+  <!-- =====================================================
+       SCANNER APP
+       ===================================================== -->
+
+  <div
+    id="scannerApp"
+    class="app hidden">
+
+    <h1>
+      Сканер серийных номеров
+    </h1>
+
 
     <div
-      id="pinError"
-      class="pin-error">
+      id="executorInfo"
+      class="executor-info">
     </div>
 
-  </div>
 
-</div>
+    <div id="reader"></div>
 
 
-<!-- SETUP -->
+    <div
+      id="status"
+      class="status info">
 
-<div
-  id="setupApp"
-  class="app hidden">
+      Нажмите «Начать сканирование» и разрешите доступ к камере.
 
-  <h1>
-    Сканер серийных номеров
-  </h1>
+    </div>
 
-  <div class="setup-box">
-
-    <label for="executor">
-      Имя и фамилия исполнителя
-    </label>
-
-    <input
-      id="executor"
-      type="text"
-      autocomplete="name"
-      placeholder="Например: Иван Иванов">
-
-    <br><br>
-
-    <label for="du">
-      ДУ прибора
-    </label>
-
-    <select id="du">
-
-      <option value="">
-        — Выберите ДУ —
-      </option>
-
-      <option>DN15 Modbus</option>
-      <option>DN15 LoraWan</option>
-      <option>DN20 Modbus</option>
-      <option>DN20 LoraWan</option>
-      <option>DN25 BR</option>
-      <option>DN32 BR</option>
-      <option>DN40 BR</option>
-      <option>DN50 BR</option>
-      <option>DN50 CLI</option>
-      <option>DN80 CLI</option>
-      <option>DN100 CLI</option>
-      <option>DN150 CLI</option>
-      <option>DN200 CLI</option>
-
-    </select>
 
     <button
-      id="sessionBtn"
-      onclick="startSession()">
+      id="startBtn"
+      onclick="startScanner()">
 
-      ▶ Начать сеанс
+      📷 Начать сканирование
 
     </button>
 
+
+    <div class="stats">
+
+      <div class="card">
+
+        Добавлено
+
+        <span
+          class="num"
+          id="count">
+          0
+        </span>
+
+      </div>
+
+
+      <div class="card">
+
+        Повторов
+
+        <span
+          class="num"
+          id="dupes">
+          0
+        </span>
+
+      </div>
+
+
+      <div class="card limit-card">
+
+        Лимит сеанса
+
+        <span
+          class="num"
+          id="limitText">
+          0 / 150
+        </span>
+
+        <div class="progress">
+
+          <div
+            id="progressBar"
+            class="progress-bar">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
     <div
-      id="setupStatus"
-      class="status info hidden">
-    </div>
+      class="last"
+      id="last">
 
-  </div>
-
-</div>
-
-
-<!-- SCANNER -->
-
-<div
-  id="scannerApp"
-  class="app hidden">
-
-  <h1>
-    Сканирование
-  </h1>
-
-  <div class="info-panel">
-
-    <b id="executorView"></b>
-
-    <br>
-
-    ДУ:
-    <b id="duView"></b>
-
-    <br>
-
-    Дата:
-    <b id="dateView"></b>
-
-    <br>
-
-    Сеанс №
-    <b id="sessionView"></b>
-
-  </div>
-
-
-  <div id="reader"></div>
-
-
-  <div
-    id="status"
-    class="status info">
-
-    Нажмите «Начать камеру»
-    и разрешите доступ к камере.
-
-  </div>
-
-
-  <button
-    id="startBtn"
-    onclick="startScanner()">
-
-    📷 Начать камеру
-
-  </button>
-
-
-  <div class="stats">
-
-    <div class="card">
-
-      Добавлено
-
-      <span
-        class="num"
-        id="count">
-        0
-      </span>
+      Последний номер: —
 
     </div>
 
-    <div class="card">
 
-      Повторов
+    <button
+      id="newSessionBtn"
+      class="secondary-button"
+      onclick="newSession()">
 
-      <span
-        class="num"
-        id="dupes">
-        0
-      </span>
+      🔄 Новый сеанс
+
+    </button>
+
+
+    <div class="hint">
+
+      Максимум 150 уникальных кодов за один сеанс.
+      Дубликаты в таблицу не добавляются.
 
     </div>
 
   </div>
 
 
-  <div
-    class="info-panel">
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
 
-    Лимит:
+  <script>
 
-    <b id="limitView">
-      150
-    </b>
+    /* =====================================================
+       НАСТРОЙКИ
+       ===================================================== */
 
-    <br>
+    const PIN = "77777777";
 
-    Осталось:
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbxiZia7qBQmlgRQTm9eRX7qmRmczYimSoltss3URIbodkp5ZGPLO-Htl_7pVqAaqPPUaA/exec";
 
-    <b id="remainingView">
-      150
-    </b>
 
-  </div>
+    /* =====================================================
+       СОСТОЯНИЕ ПРИЛОЖЕНИЯ
+       ===================================================== */
 
+    let scanner = null;
 
-  <div
-    class="last"
-    id="last">
+    let scanning = false;
 
-    Последний номер: —
+    let processing = false;
 
-  </div>
+    let count = 0;
 
+    let dupes = 0;
 
-  <button
-    id="closeSessionBtn"
-    class="secondary"
-    onclick="closeSession()">
+    let lastAcceptedSerial = "";
 
-    ⏹ Закрыть сеанс
+    let lastAcceptedAt = 0;
 
-  </button>
+    let audioContext = null;
 
+    let executor = "";
 
-  <div class="hint">
+    let du = "";
 
-    Дубликаты не записываются.
-    Максимум 150 уникальных кодов за один сеанс.
+    let session = 0;
 
-  </div>
+    let sessionDate = "";
 
-</div>
+    let maxPerSession = 150;
 
 
-<script>
+    /* =====================================================
+       DOM
+       ===================================================== */
 
+    const pinScreen =
+      document.getElementById("pinScreen");
 
-/* =========================
-   НАСТРОЙКИ
-========================= */
+    const setupScreen =
+      document.getElementById("setupScreen");
 
-const PIN = "77777777";
+    const scannerApp =
+      document.getElementById("scannerApp");
 
-const API_URL =
-"https://script.google.com/macros/s/AKfycbxiZia7qBQmlgRQTm9eRX7qmRmczYimSoltss3URIbodkp5ZGPLO-Htl_7pVqAaqPPUaA/exec";
+    const pinInput =
+      document.getElementById("pinInput");
 
+    const pinError =
+      document.getElementById("pinError");
 
-/* =========================
-   ПЕРЕМЕННЫЕ
-========================= */
+    const executorInput =
+      document.getElementById("executorInput");
 
-let scanner = null;
+    const duSelect =
+      document.getElementById("duSelect");
 
-let scanning = false;
+    const setupStatus =
+      document.getElementById("setupStatus");
 
-let processing = false;
+    const beginSessionBtn =
+      document.getElementById("beginSessionBtn");
 
-let count = 0;
+    const executorInfo =
+      document.getElementById("executorInfo");
 
-let dupes = 0;
+    const statusEl =
+      document.getElementById("status");
 
-let lastAcceptedSerial = "";
+    const startBtn =
+      document.getElementById("startBtn");
 
-let lastAcceptedAt = 0;
+    const countEl =
+      document.getElementById("count");
 
-let audioContext = null;
+    const dupesEl =
+      document.getElementById("dupes");
 
-let executor = "";
+    const lastEl =
+      document.getElementById("last");
 
-let du = "";
+    const limitText =
+      document.getElementById("limitText");
 
-let session = 0;
+    const progressBar =
+      document.getElementById("progressBar");
 
-let sessionDate = "";
 
-let maxPerSession = 150;
+    /* =====================================================
+       PIN
+       ===================================================== */
 
+    function checkPin() {
 
-/* =========================
-   DOM
-========================= */
+      const value =
+        pinInput.value.trim();
 
-const statusEl =
-  document.getElementById("status");
 
-const startBtn =
-  document.getElementById("startBtn");
+      if (value === PIN) {
 
-const countEl =
-  document.getElementById("count");
+        pinScreen.classList.add("hidden");
 
-const dupesEl =
-  document.getElementById("dupes");
+        setupScreen.classList.remove("hidden");
 
-const lastEl =
-  document.getElementById("last");
+        pinError.textContent = "";
 
-const remainingEl =
-  document.getElementById("remainingView");
+        pinInput.value = "";
 
+        setTimeout(function() {
+          executorInput.focus();
+        }, 100);
 
-/* =========================
-   PIN
-========================= */
+      } else {
 
-function checkPin() {
+        pinError.textContent =
+          "Неверный PIN-код";
 
-  const input =
-    document.getElementById("pinInput");
+        pinInput.value = "";
 
-  const error =
-    document.getElementById("pinError");
-
-
-  if (input.value === PIN) {
-
-    document
-      .getElementById("pinScreen")
-      .classList.add("hidden");
-
-    document
-      .getElementById("setupApp")
-      .classList.remove("hidden");
-
-    error.textContent = "";
-
-    input.value = "";
-
-    document
-      .getElementById("executor")
-      .focus();
-
-  } else {
-
-    error.textContent =
-      "Неверный PIN-код";
-
-    input.value = "";
-
-    input.focus();
-
-  }
-
-}
-
-
-document
-  .getElementById("pinInput")
-  .addEventListener(
-    "keydown",
-    function(e) {
-
-      if (e.key === "Enter") {
-
-        checkPin();
+        pinInput.focus();
 
       }
 
     }
-  );
 
 
-/* =========================
-   УТИЛИТЫ
-========================= */
+    pinInput.addEventListener(
+      "keydown",
+      function(e) {
 
-function esc(v) {
-
-  return String(v)
-
-    .replace(/&/g, "&amp;")
-
-    .replace(/</g, "&lt;")
-
-    .replace(/>/g, "&gt;")
-
-    .replace(/"/g, "&quot;")
-
-    .replace(/'/g, "&#039;");
-
-}
-
-
-function setStatus(html, cls) {
-
-  statusEl.className =
-    "status " + cls;
-
-  statusEl.innerHTML = html;
-
-}
-
-
-function extractSerial(text) {
-
-  const raw =
-    String(text || "")
-      .trim()
-      .replace(/\s+/g, " ");
-
-
-  const m =
-    raw.match(
-      /\bSN\s*[:#-]?\s*([A-Za-z0-9_-]+)/i
-    );
-
-
-  if (m) {
-
-    return "SN " + m[1];
-
-  }
-
-
-  return raw;
-
-}
-
-
-/* =========================
-   ЗВУК
-========================= */
-
-function beep(ok) {
-
-  try {
-
-    if (!audioContext) {
-
-      audioContext =
-        new (
-          window.AudioContext ||
-          window.webkitAudioContext
-        )();
-
-    }
-
-
-    if (
-      audioContext.state ===
-      "suspended"
-    ) {
-
-      audioContext.resume();
-
-    }
-
-
-    const osc =
-      audioContext.createOscillator();
-
-    const gain =
-      audioContext.createGain();
-
-
-    osc.connect(gain);
-
-    gain.connect(
-      audioContext.destination
-    );
-
-
-    osc.frequency.value =
-      ok ? 880 : 330;
-
-    osc.type = "sine";
-
-
-    const now =
-      audioContext.currentTime;
-
-
-    gain.gain.setValueAtTime(
-      .001,
-      now
-    );
-
-
-    gain.gain
-      .exponentialRampToValueAtTime(
-        .18,
-        now + .01
-      );
-
-
-    gain.gain
-      .exponentialRampToValueAtTime(
-        .001,
-        now + (ok ? .13 : .25)
-      );
-
-
-    osc.start(now);
-
-    osc.stop(
-      now + (ok ? .14 : .26)
-    );
-
-  } catch (e) {}
-
-}
-
-
-/* =========================
-   СТАРТ СЕАНСА
-========================= */
-
-function startSession() {
-
-  const executorInput =
-    document.getElementById("executor");
-
-  const duInput =
-    document.getElementById("du");
-
-  const btn =
-    document.getElementById("sessionBtn");
-
-  const setupStatus =
-    document.getElementById("setupStatus");
-
-
-  executor =
-    executorInput.value.trim();
-
-  du =
-    duInput.value;
-
-
-  if (!executor) {
-
-    setupStatus.className =
-      "status error";
-
-    setupStatus.textContent =
-      "Введите имя и фамилию исполнителя.";
-
-    setupStatus.classList.remove(
-      "hidden"
-    );
-
-    return;
-
-  }
-
-
-  if (!du) {
-
-    setupStatus.className =
-      "status error";
-
-    setupStatus.textContent =
-      "Выберите ДУ прибора.";
-
-    setupStatus.classList.remove(
-      "hidden"
-    );
-
-    return;
-
-  }
-
-
-  btn.disabled = true;
-
-  setupStatus.className =
-    "status info";
-
-  setupStatus.textContent =
-    "⏳ Создаём новый сеанс…";
-
-  setupStatus.classList.remove(
-    "hidden"
-  );
-
-
-  jsonp(
-    "startSession",
-    {
-      executor: executor,
-      du: du
-    },
-    function(r) {
-
-      btn.disabled = false;
-
-
-      if (!r || !r.success) {
-
-        setupStatus.className =
-          "status error";
-
-        setupStatus.innerHTML =
-          "❌ Ошибка<br>" +
-          "<small>" +
-          esc(
-            r && r.message
-              ? r.message
-              : "Нет ответа"
-          ) +
-          "</small>";
-
-        return;
+        if (e.key === "Enter") {
+          checkPin();
+        }
 
       }
+    );
 
 
-      sessionDate =
-        r.date;
+    /* =====================================================
+       ESCAPE
+       ===================================================== */
 
-      session =
-        Number(r.session);
+    function esc(value) {
 
-      maxPerSession =
-        Number(r.max || 150);
-
-      count = 0;
-
-      dupes = 0;
-
-
-      countEl.textContent =
-        "0";
-
-      dupesEl.textContent =
-        "0";
-
-      remainingEl.textContent =
-        maxPerSession;
-
-
-      document
-        .getElementById("executorView")
-        .textContent =
-        executor;
-
-      document
-        .getElementById("duView")
-        .textContent =
-        du;
-
-      document
-        .getElementById("dateView")
-        .textContent =
-        sessionDate;
-
-      document
-        .getElementById("sessionView")
-        .textContent =
-        session;
-
-      document
-        .getElementById("limitView")
-        .textContent =
-        maxPerSession;
-
-
-      document
-        .getElementById("setupApp")
-        .classList.add("hidden");
-
-      document
-        .getElementById("scannerApp")
-        .classList.remove("hidden");
-
-
-      setStatus(
-        "Нажмите «Начать камеру»",
-        "info"
-      );
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
     }
-  );
 
-}
 
+    /* =====================================================
+       STATUS
+       ===================================================== */
 
-/* =========================
-   КАМЕРА
-========================= */
+    function setStatus(html, cls) {
 
-function startScanner() {
+      statusEl.className =
+        "status " + cls;
 
-  if (scanning) return;
+      statusEl.innerHTML =
+        html;
 
+    }
 
-  startBtn.disabled = true;
 
-  processing = false;
+    /* =====================================================
+       ЗВУК
+       ===================================================== */
 
+    function beep(ok) {
 
-  try {
+      try {
 
-    audioContext =
-      new (
-        window.AudioContext ||
-        window.webkitAudioContext
-      )();
+        if (!audioContext) {
 
-  } catch (e) {}
-
-
-  setStatus(
-    "Запрашиваем доступ к камере…",
-    "info"
-  );
-
-
-  scanner =
-    new Html5Qrcode("reader");
-
-  scanning = true;
-
-
-  scanner.start(
-
-    {
-      facingMode: "environment"
-    },
-
-    {
-      fps: 10,
-
-      qrbox: function(w, h) {
-
-        const s =
-          Math.floor(
-            Math.min(w, h) * .68
-          );
-
-        return {
-
-          width:
-            Math.max(180, s),
-
-          height:
-            Math.max(180, s)
-
-        };
-
-      },
-
-      aspectRatio: 1
-
-    },
-
-    onScanSuccess,
-
-    function() {}
-
-  )
-
-  .then(function() {
-
-    setStatus(
-      "Наведите камеру на QR-код",
-      "info"
-    );
-
-  })
-
-  .catch(function(e) {
-
-    scanning = false;
-
-    startBtn.disabled = false;
-
-    setStatus(
-      "❌ Не удалось открыть камеру<br>" +
-      "<small>" +
-      esc(e) +
-      "</small>",
-      "error"
-    );
-
-  });
-
-}
-
-
-/* =========================
-   СКАНИРОВАНИЕ
-========================= */
-
-function onScanSuccess(decodedText) {
-
-  if (processing) return;
-
-
-  if (count >= maxPerSession) {
-
-    setStatus(
-      "🛑 ЛИМИТ 150 КОДОВ ДОСТИГНУТ",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const serial =
-    extractSerial(decodedText);
-
-
-  if (!serial) return;
-
-
-  const now =
-    Date.now();
-
-
-  if (
-    serial === lastAcceptedSerial &&
-    (now - lastAcceptedAt) < 3000
-  ) {
-
-    return;
-
-  }
-
-
-  processing = true;
-
-  lastAcceptedSerial =
-    serial;
-
-  lastAcceptedAt =
-    now;
-
-
-  setStatus(
-    "⏳ Сохраняем<br><b>" +
-    esc(serial) +
-    "</b>",
-    "info"
-  );
-
-
-  saveSerial(serial);
-
-}
-
-
-/* =========================
-   СОХРАНЕНИЕ
-========================= */
-
-function saveSerial(serial) {
-
-  jsonp(
-
-    "save",
-
-    {
-
-      serial: serial,
-
-      executor: executor,
-
-      du: du,
-
-      session: session
-
-    },
-
-    function(r) {
-
-      if (!r) {
-
-        processing = false;
-
-        setStatus(
-          "❌ Нет ответа от Google Sheets.<br>" +
-          "Проверьте интернет.",
-          "error"
-        );
-
-        beep(false);
-
-        return;
-
-      }
-
-
-      /* SUCCESS */
-
-      if (r.success) {
-
-        count =
-          Number(r.count || count + 1);
-
-        countEl.textContent =
-          count;
-
-        remainingEl.textContent =
-          Math.max(
-            0,
-            maxPerSession - count
-          );
-
-
-        lastEl.textContent =
-          "Последний номер: " +
-          r.serial;
-
-
-        setStatus(
-
-          "🟢 ДОБАВЛЕНО<br>" +
-          "<b>" +
-          esc(r.serial) +
-          "</b>",
-
-          "success"
-
-        );
-
-
-        beep(true);
-
-
-        if (
-          count >=
-          maxPerSession
-        ) {
-
-          setTimeout(function() {
-
-            setStatus(
-              "🛑 ЛИМИТ 150 КОДОВ ДОСТИГНУТ<br>" +
-              "Закройте сеанс.",
-              "error"
-            );
-
-            processing = false;
-
-          }, 700);
-
-        } else {
-
-          setTimeout(function() {
-
-            processing = false;
-
-            setStatus(
-              "Наведите на следующий QR-код",
-              "info"
-            );
-
-          }, 600);
+          audioContext =
+            new (
+              window.AudioContext ||
+              window.webkitAudioContext
+            )();
 
         }
 
+        if (
+          audioContext.state ===
+          "suspended"
+        ) {
+
+          audioContext.resume();
+
+        }
+
+        const osc =
+          audioContext.createOscillator();
+
+        const gain =
+          audioContext.createGain();
+
+        osc.connect(gain);
+
+        gain.connect(
+          audioContext.destination
+        );
+
+        osc.frequency.value =
+          ok ? 880 : 330;
+
+        osc.type = "sine";
+
+        const now =
+          audioContext.currentTime;
+
+        gain.gain.setValueAtTime(
+          .001,
+          now
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+          .18,
+          now + .01
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+          .001,
+          now + (ok ? .13 : .25)
+        );
+
+        osc.start(now);
+
+        osc.stop(
+          now + (ok ? .14 : .26)
+        );
+
+      } catch (e) {}
+
+    }
+
+
+    /* =====================================================
+       JSONP
+       ===================================================== */
+
+    function jsonpRequest(
+      params,
+      success,
+      error
+    ) {
+
+      const callbackName =
+        "qrCallback_" +
+        Date.now() +
+        "_" +
+        Math.floor(
+          Math.random() * 100000
+        );
+
+
+      const script =
+        document.createElement("script");
+
+
+      let finished = false;
+
+
+      const timeout =
+        setTimeout(
+          function() {
+
+            if (finished) return;
+
+            finished = true;
+
+            cleanup();
+
+            if (error) {
+              error();
+            }
+
+          },
+          15000
+        );
+
+
+      window[callbackName] =
+        function(response) {
+
+          if (finished) return;
+
+          finished = true;
+
+          clearTimeout(timeout);
+
+          cleanup();
+
+          if (success) {
+            success(response);
+          }
+
+        };
+
+
+      script.onerror =
+        function() {
+
+          if (finished) return;
+
+          finished = true;
+
+          clearTimeout(timeout);
+
+          cleanup();
+
+          if (error) {
+            error();
+          }
+
+        };
+
+
+      const query = new URLSearchParams();
+
+
+      Object.keys(params)
+        .forEach(function(key) {
+
+          query.append(
+            key,
+            params[key]
+          );
+
+        });
+
+
+      query.append(
+        "callback",
+        callbackName
+      );
+
+
+      query.append(
+        "t",
+        Date.now()
+      );
+
+
+      script.src =
+        API_URL +
+        "?" +
+        query.toString();
+
+
+      document.body.appendChild(
+        script
+      );
+
+
+      function cleanup() {
+
+        delete window[
+          callbackName
+        ];
+
+        if (
+          script.parentNode
+        ) {
+
+          script.parentNode.removeChild(
+            script
+          );
+
+        }
+
+      }
+
+    }
+
+
+    /* =====================================================
+       НАЧАЛО СЕАНСА
+       ===================================================== */
+
+    function beginSession() {
+
+      executor =
+        executorInput.value
+          .trim()
+          .replace(/\s+/g, " ");
+
+
+      du =
+        duSelect.value;
+
+
+      if (!executor) {
+
+        setupStatus.classList.remove(
+          "hidden"
+        );
+
+        setupStatus.textContent =
+          "Введите имя и фамилию исполнителя.";
+
+        executorInput.focus();
 
         return;
 
       }
 
 
-      /* DUPLICATE */
+      if (!du) {
 
-      if (r.duplicate) {
-
-        dupes++;
-
-        dupesEl.textContent =
-          dupes;
-
-
-        lastEl.textContent =
-          "Повтор: " +
-          r.serial;
-
-
-        setStatus(
-
-          "⚠️ УЖЕ ЕСТЬ В ТАБЛИЦЕ<br>" +
-          "<b>" +
-          esc(r.serial) +
-          "</b><br>" +
-          "<small>" +
-          esc(r.message || "") +
-          "</small>",
-
-          "duplicate"
-
+        setupStatus.classList.remove(
+          "hidden"
         );
 
+        setupStatus.textContent =
+          "Выберите ДУ прибора.";
 
-        beep(false);
+        duSelect.focus();
+
+        return;
+
+      }
 
 
-        setTimeout(function() {
+      beginSessionBtn.disabled =
+        true;
 
-          processing = false;
+
+      setupStatus.classList.remove(
+        "hidden"
+      );
+
+      setupStatus.textContent =
+        "⏳ Создаём новый сеанс…";
+
+
+      jsonpRequest(
+
+        {
+          action: "startSession",
+
+          executor: executor,
+
+          du: du
+
+        },
+
+        function(response) {
+
+          beginSessionBtn.disabled =
+            false;
+
+
+          if (
+            !response ||
+            !response.success
+          ) {
+
+            setupStatus.textContent =
+              "❌ " +
+              (
+                response &&
+                response.message
+                  ? response.message
+                  : "Не удалось создать сеанс."
+              );
+
+            return;
+
+          }
+
+
+          sessionDate =
+            response.date;
+
+          session =
+            Number(response.session);
+
+          maxPerSession =
+            Number(
+              response.max || 150
+            );
+
+
+          count =
+            Number(
+              response.count || 0
+            );
+
+          dupes = 0;
+
+
+          updateCounter();
+
+
+          executorInfo.innerHTML =
+            "<b>Исполнитель:</b> " +
+            esc(executor) +
+            "<br>" +
+            "<b>ДУ:</b> " +
+            esc(du) +
+            "<br>" +
+            "<b>Дата:</b> " +
+            esc(sessionDate) +
+            "<br>" +
+            "<b>Сеанс №:</b> " +
+            session;
+
+
+          setupScreen.classList.add(
+            "hidden"
+          );
+
+          scannerApp.classList.remove(
+            "hidden"
+          );
+
 
           setStatus(
-            "Наведите на следующий QR-код",
+            "Сеанс №" +
+            session +
+            " создан.<br>" +
+            "Нажмите «Начать сканирование».",
             "info"
           );
 
-        }, 1300);
+        },
+
+        function() {
+
+          beginSessionBtn.disabled =
+            false;
+
+          setupStatus.classList.remove(
+            "hidden"
+          );
+
+          setupStatus.textContent =
+            "❌ Не удалось связаться с Google Sheets.";
+
+        }
+
+      );
+
+    }
 
 
-        return;
+    /* =====================================================
+       ОБНОВЛЕНИЕ СЧЁТЧИКА
+       ===================================================== */
 
-      }
+    function updateCounter() {
 
-
-      /* LIMIT */
-
-      if (r.limitReached) {
-
-        count =
-          Number(r.count || count);
-
-        countEl.textContent =
-          count;
-
-        remainingEl.textContent =
-          "0";
+      countEl.textContent =
+        count;
 
 
-        setStatus(
+      dupesEl.textContent =
+        dupes;
 
-          "🛑 ЛИМИТ ДОСТИГНУТ<br>" +
-          "<b>" +
-          esc(r.message) +
-          "</b>",
 
-          "error"
+      limitText.textContent =
+        count +
+        " / " +
+        maxPerSession;
 
+
+      const percent =
+        Math.min(
+          100,
+          (count / maxPerSession) * 100
         );
 
 
-        beep(false);
+      progressBar.style.width =
+        percent + "%";
 
-        processing = false;
+    }
+
+
+    /* =====================================================
+       ИЗВЛЕЧЕНИЕ SN ИЗ QR
+       ===================================================== */
+
+    function extractSerial(text) {
+
+      const raw =
+        String(text || "")
+          .trim()
+          .replace(/\s+/g, " ");
+
+
+      const match =
+        raw.match(
+          /\bSN\s*[:#-]?\s*([A-Za-z0-9_-]+)/i
+        );
+
+
+      if (match) {
+
+        return "SN " + match[1];
+
+      }
+
+
+      return raw;
+
+    }
+
+
+    /* =====================================================
+       ЗАПУСК КАМЕРЫ
+       ===================================================== */
+
+    function startScanner() {
+
+      if (scanning) {
+        return;
+      }
+
+
+      if (
+        count >=
+        maxPerSession
+      ) {
+
+        setStatus(
+          "⛔ Лимит в " +
+          maxPerSession +
+          " кодов уже достигнут.",
+          "warning"
+        );
 
         return;
 
       }
 
 
-      /* OTHER ERROR */
+      startBtn.disabled =
+        true;
+
+
+      processing =
+        false;
+
+
+      try {
+
+        audioContext =
+          new (
+            window.AudioContext ||
+            window.webkitAudioContext
+          )();
+
+      } catch (e) {}
+
 
       setStatus(
-
-        "❌ Ошибка<br>" +
-        "<small>" +
-        esc(
-          r.message ||
-          "Неизвестная ошибка"
-        ) +
-        "</small>",
-
-        "error"
-
+        "Запрашиваем доступ к камере…",
+        "info"
       );
 
 
-      beep(false);
+      scanner =
+        new Html5Qrcode(
+          "reader"
+        );
 
-      processing = false;
 
-    }
+      scanning = true;
 
-  );
 
-}
+      scanner.start(
 
+        {
+          facingMode:
+            "environment"
+        },
 
-/* =========================
-   JSONP
-========================= */
+        {
 
-function jsonp(action, params, callback) {
+          fps: 10,
 
-  const cb =
-    "qrCallback_" +
-    Date.now() +
-    "_" +
-    Math.floor(
-      Math.random() * 100000
-    );
+          qrbox: function(w, h) {
 
+            const size =
+              Math.floor(
+                Math.min(w, h) *
+                .68
+              );
 
-  const script =
-    document.createElement("script");
+            return {
 
+              width:
+                Math.max(
+                  180,
+                  size
+                ),
 
-  const query =
-    new URLSearchParams();
+              height:
+                Math.max(
+                  180,
+                  size
+                )
 
+            };
 
-  query.set(
-    "action",
-    action
-  );
+          },
 
+          aspectRatio: 1
 
-  query.set(
-    "callback",
-    cb
-  );
+        },
 
+        onScanSuccess,
 
-  Object.keys(params)
-    .forEach(function(key) {
+        function() {}
 
-      query.set(
-        key,
-        params[key]
-      );
+      )
 
-    });
+      .then(function() {
 
+        startBtn.disabled =
+          false;
 
-  let finished = false;
+        setStatus(
+          "Наведите камеру на QR-код",
+          "info"
+        );
 
+      })
 
-  const timeout =
-    setTimeout(function() {
-
-      if (finished) return;
-
-      finished = true;
-
-      cleanup();
-
-      callback({
-
-        success: false,
-
-        message:
-          "Нет ответа от Google Sheets"
-
-      });
-
-    }, 15000);
-
-
-  window[cb] =
-    function(data) {
-
-      if (finished) return;
-
-      finished = true;
-
-      clearTimeout(timeout);
-
-      cleanup();
-
-      callback(data);
-
-    };
-
-
-  script.onerror =
-    function() {
-
-      if (finished) return;
-
-      finished = true;
-
-      clearTimeout(timeout);
-
-      cleanup();
-
-      callback({
-
-        success: false,
-
-        message:
-          "Не удалось связаться с Google Sheets"
-
-      });
-
-    };
-
-
-  script.src =
-    API_URL +
-    "?" +
-    query.toString();
-
-
-  document.body.appendChild(
-    script
-  );
-
-
-  function cleanup() {
-
-    delete window[cb];
-
-    if (script.parentNode) {
-
-      script.parentNode
-        .removeChild(script);
-
-    }
-
-  }
-
-}
-
-
-/* =========================
-   ЗАКРЫТИЕ СЕАНСА
-========================= */
-
-function closeSession() {
-
-  if (scanning && scanner) {
-
-    scanner
-      .stop()
-      .catch(function() {})
-      .finally(function() {
+      .catch(function(error) {
 
         scanning = false;
 
+        startBtn.disabled =
+          false;
+
+        setStatus(
+          "❌ Не удалось открыть камеру<br>" +
+          "<small>" +
+          esc(error) +
+          "</small>",
+          "error"
+        );
+
       });
 
-  }
+    }
 
 
-  processing = false;
+    /* =====================================================
+       УСПЕШНОЕ РАСПОЗНАВАНИЕ QR
+       ===================================================== */
+
+    function onScanSuccess(
+      decodedText
+    ) {
+
+      if (processing) {
+        return;
+      }
 
 
-  document
-    .getElementById("scannerApp")
-    .classList.add("hidden");
+      if (
+        count >=
+        maxPerSession
+      ) {
+
+        setStatus(
+          "⛔ Лимит в " +
+          maxPerSession +
+          " кодов достигнут.",
+          "warning"
+        );
+
+        return;
+
+      }
 
 
-  document
-    .getElementById("setupApp")
-    .classList.remove("hidden");
+      const serial =
+        extractSerial(
+          decodedText
+        );
 
 
-  document
-    .getElementById("setupStatus")
-    .className =
-    "status success";
+      if (!serial) {
+        return;
+      }
 
 
-  document
-    .getElementById("setupStatus")
-    .textContent =
-    "Сеанс №" +
-    session +
-    " закрыт. Можно начать следующий.";
-
-  document
-    .getElementById("setupStatus")
-    .classList.remove(
-      "hidden"
-    );
+      const now =
+        Date.now();
 
 
-  document
-    .getElementById("sessionBtn")
-    .disabled = false;
+      /*
+       * Защита от того,
+       * что камера несколько раз подряд
+       * распознаёт один и тот же QR.
+       */
 
-}
+      if (
+        serial ===
+          lastAcceptedSerial &&
+        now -
+          lastAcceptedAt <
+          3000
+      ) {
 
-</script>
+        return;
+
+      }
+
+
+      processing = true;
+
+      lastAcceptedSerial =
+        serial;
+
+      lastAcceptedAt =
+        now;
+
+
+      setStatus(
+        "⏳ Сохраняем<br><b>" +
+        esc(serial) +
+        "</b>",
+        "info"
+      );
+
+
+      saveSerial(
+        serial
+      );
+
+    }
+
+
+    /* =====================================================
+       СОХРАНЕНИЕ SN
+       ===================================================== */
+
+    function saveSerial(
+      serial
+    ) {
+
+      jsonpRequest(
+
+        {
+
+          action: "save",
+
+          serial: serial,
+
+          executor: executor,
+
+          du: du,
+
+          session: session
+
+        },
+
+        function(response) {
+
+          /*
+           * ==============================
+           * УСПЕШНО ДОБАВЛЕН
+           * ==============================
+           */
+
+          if (
+            response &&
+            response.success
+          ) {
+
+
+            /*
+             * КЛЮЧЕВОЙ МОМЕНТ:
+             *
+             * Берём count именно
+             * из Google Sheets.
+             */
+
+            count =
+              Number(
+                response.count || 0
+              );
+
+
+            updateCounter();
+
+
+            lastEl.textContent =
+              "Последний номер: " +
+              response.serial;
+
+
+            setStatus(
+              "🟢 ДОБАВЛЕНО<br>" +
+              "<b>" +
+              esc(
+                response.serial
+              ) +
+              "</b><br>" +
+              "<small>" +
+              count +
+              " / " +
+              maxPerSession +
+              "</small>",
+              "success"
+            );
+
+
+            beep(true);
+
+
+            /*
+             * Если достигли 150 —
+             * останавливаем камеру.
+             */
+
+            if (
+              count >=
+              maxPerSession
+            ) {
+
+              stopScanner(
+                "Лимит в " +
+                maxPerSession +
+                " кодов достигнут."
+              );
+
+              processing =
+                false;
+
+              return;
+
+            }
+
+
+            setTimeout(
+              function() {
+
+                processing =
+                  false;
+
+                setStatus(
+                  "Наведите на следующий QR-код",
+                  "info"
+                );
+
+              },
+              700
+            );
+
+
+            return;
+
+          }
+
+
+          /*
+           * ==============================
+           * ДУБЛИКАТ
+           * ==============================
+           */
+
+          if (
+            response &&
+            response.duplicate
+          ) {
+
+
+            /*
+             * При дубликате count
+             * также берём от сервера.
+             */
+
+            count =
+              Number(
+                response.count ||
+                count
+              );
+
+
+            dupes++;
+
+
+            updateCounter();
+
+
+            lastEl.textContent =
+              "Повтор: " +
+              response.serial;
+
+
+            setStatus(
+              "⚠️ УЖЕ ЕСТЬ В ТАБЛИЦЕ<br>" +
+              "<b>" +
+              esc(
+                response.serial
+              ) +
+              "</b><br>" +
+              "<small>" +
+              esc(
+                response.message ||
+                ""
+              ) +
+              "</small>",
+              "duplicate"
+            );
+
+
+            beep(false);
+
+
+            setTimeout(
+              function() {
+
+                processing =
+                  false;
+
+                setStatus(
+                  "Наведите на следующий QR-код",
+                  "info"
+                );
+
+              },
+              1500
+            );
+
+
+            return;
+
+          }
+
+
+          /*
+           * ==============================
+           * ЛИМИТ
+           * ==============================
+           */
+
+          if (
+            response &&
+            response.limitReached
+          ) {
+
+
+            count =
+              Number(
+                response.count ||
+                maxPerSession
+              );
+
+
+            maxPerSession =
+              Number(
+                response.max ||
+                maxPerSession
+              );
+
+
+            updateCounter();
+
+
+            setStatus(
+              "⛔ ЛИМИТ ДОСТИГНУТ<br>" +
+              "<b>" +
+              maxPerSession +
+              " кодов</b>",
+              "warning"
+            );
+
+
+            beep(false);
+
+
+            stopScanner(
+              "Лимит сеанса достигнут."
+            );
+
+
+            processing =
+              false;
+
+
+            return;
+
+          }
+
+
+          /*
+           * ==============================
+           * ДРУГАЯ ОШИБКА
+           * ==============================
+           */
+
+          setStatus(
+            "❌ Ошибка<br>" +
+            "<small>" +
+            esc(
+              (
+                response &&
+                response.message
+              ) ||
+              "Неизвестная ошибка"
+            ) +
+            "</small>",
+            "error"
+          );
+
+
+          beep(false);
+
+          processing =
+            false;
+
+        },
+
+        function() {
+
+          setStatus(
+            "❌ Не удалось связаться с Google Sheets.<br>" +
+            "<small>Проверьте интернет-соединение.</small>",
+            "error"
+          );
+
+
+          beep(false);
+
+          processing =
+            false;
+
+        }
+
+      );
+
+    }
+
+
+    /* =====================================================
+       ОСТАНОВКА КАМЕРЫ
+       ===================================================== */
+
+    function stopScanner(
+      message
+    ) {
+
+      if (
+        !scanner ||
+        !scanning
+      ) {
+
+        startBtn.disabled =
+          false;
+
+        return;
+
+      }
+
+
+      scanner
+        .stop()
+        .then(function() {
+
+          scanning =
+            false;
+
+          startBtn.disabled =
+            false;
+
+          setStatus(
+            "⛔ " +
+            esc(message),
+            "warning"
+          );
+
+        })
+        .catch(function() {
+
+          scanning =
+            false;
+
+          startBtn.disabled =
+            false;
+
+        });
+
+    }
+
+
+    /* =====================================================
+       НОВЫЙ СЕАНС
+       ===================================================== */
+
+    function newSession() {
+
+      /*
+       * Если камера включена —
+       * сначала выключаем её.
+       */
+
+      if (
+        scanner &&
+        scanning
+      ) {
+
+        scanner
+          .stop()
+          .catch(function() {});
+
+        scanning =
+          false;
+
+      }
+
+
+      processing =
+        false;
+
+      count =
+        0;
+
+      dupes =
+        0;
+
+      lastAcceptedSerial =
+        "";
+
+      lastAcceptedAt =
+        0;
+
+
+      updateCounter();
+
+
+      scannerApp.classList.add(
+        "hidden"
+      );
+
+
+      setupScreen.classList.remove(
+        "hidden"
+      );
+
+
+      setupStatus.classList.add(
+        "hidden"
+      );
+
+
+      beginSessionBtn.disabled =
+        false;
+
+
+      executorInput.value =
+        executor;
+
+
+      duSelect.value =
+        "";
+
+
+      setTimeout(function() {
+
+        duSelect.focus();
+
+      }, 100);
+
+    }
+
+  </script>
 
 </body>
-
 </html>
+```
