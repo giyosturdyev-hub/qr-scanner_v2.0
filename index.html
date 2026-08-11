@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="ru">
 
 <head>
@@ -15,7 +16,12 @@
     content="#1976d2"
   >
 
-  <title>Сканер серийных номеров</title>
+  <title>
+    Сканер серийных номеров
+  </title>
+
+
+  <!-- Библиотека QR-сканера -->
 
   <script
     src="https://unpkg.com/html5-qrcode"
@@ -65,10 +71,10 @@
 
       text-align: center;
 
-      font-size: 25px;
+      font-size: 24px;
 
       margin:
-        10px 0 18px;
+        8px 0 18px;
 
     }
 
@@ -78,7 +84,9 @@
     }
 
 
-    /* PIN */
+    /* =====================================================
+       PIN
+    ====================================================== */
 
     .pin-screen {
 
@@ -97,7 +105,7 @@
 
       width: min(92vw, 420px);
 
-      background: white;
+      background: #ffffff;
 
       border-radius: 18px;
 
@@ -154,17 +162,26 @@
     }
 
 
-    /* FORM */
+    /* =====================================================
+       FORM
+    ====================================================== */
 
     .setup {
 
-      background: white;
+      background: #ffffff;
 
       padding: 16px;
 
       border-radius: 14px;
 
       margin-bottom: 14px;
+
+    }
+
+
+    .field {
+
+      margin-bottom: 15px;
 
     }
 
@@ -180,14 +197,8 @@
     }
 
 
-    .field {
-
-      margin-bottom: 14px;
-
-    }
-
-
-    input {
+    input,
+    select {
 
       width: 100%;
 
@@ -199,6 +210,8 @@
       border-radius: 12px;
 
       font-size: 17px;
+
+      background: #ffffff;
 
       outline: none;
 
@@ -223,7 +236,7 @@
 
       background: #1976d2;
 
-      color: white;
+      color: #ffffff;
 
       cursor: pointer;
 
@@ -239,13 +252,43 @@
     }
 
 
-    /* CAMERA */
+    /* =====================================================
+       INFO
+    ====================================================== */
+
+    .info-box {
+
+      margin-bottom: 12px;
+
+      padding: 12px;
+
+      background: #ffffff;
+
+      border-radius: 12px;
+
+      text-align: center;
+
+      line-height: 1.5;
+
+    }
+
+
+    .info-box strong {
+
+      font-size: 16px;
+
+    }
+
+
+    /* =====================================================
+       CAMERA
+    ====================================================== */
 
     #reader {
 
       width: 100%;
 
-      background: #000;
+      background: #000000;
 
       border-radius: 14px;
 
@@ -253,6 +296,10 @@
 
     }
 
+
+    /* =====================================================
+       STATUS
+    ====================================================== */
 
     .status {
 
@@ -262,7 +309,7 @@
 
       border-radius: 14px;
 
-      background: white;
+      background: #ffffff;
 
       text-align: center;
 
@@ -270,7 +317,7 @@
 
       line-height: 1.4;
 
-      min-height: 65px;
+      min-height: 68px;
 
       display: flex;
 
@@ -310,7 +357,20 @@
     }
 
 
-    /* COUNTER */
+    .duplicate {
+
+      background: #fff4d6;
+
+      color: #8a5a00;
+
+      font-weight: 700;
+
+    }
+
+
+    /* =====================================================
+       COUNTER
+    ====================================================== */
 
     .counter {
 
@@ -318,7 +378,7 @@
 
       padding: 18px;
 
-      background: white;
+      background: #ffffff;
 
       border-radius: 14px;
 
@@ -342,12 +402,16 @@
 
       margin-top: 4px;
 
-      font-size: 40px;
+      font-size: 42px;
 
       font-weight: 700;
 
     }
 
+
+    /* =====================================================
+       LAST
+    ====================================================== */
 
     .last {
 
@@ -355,7 +419,7 @@
 
       padding: 14px;
 
-      background: white;
+      background: #ffffff;
 
       border-radius: 14px;
 
@@ -370,19 +434,13 @@
     }
 
 
-    .executor-info {
+    /* =====================================================
+       STOP
+    ====================================================== */
 
-      margin-bottom: 12px;
+    .stop-button {
 
-      padding: 12px;
-
-      background: white;
-
-      border-radius: 12px;
-
-      text-align: center;
-
-      color: #374151;
+      background: #b42318;
 
     }
 
@@ -395,7 +453,7 @@
 
 
   <!-- =====================================================
-       PIN
+       PIN SCREEN
   ====================================================== -->
 
   <div
@@ -424,6 +482,7 @@
       >
 
       <button
+        id="pinButton"
         onclick="checkPin()"
       >
         Войти
@@ -444,7 +503,7 @@
 
 
   <!-- =====================================================
-       APPLICATION
+       MAIN APPLICATION
   ====================================================== -->
 
   <div
@@ -457,12 +516,16 @@
     </h1>
 
 
-    <!-- ФИО -->
+    <!-- ===================================================
+         НАСТРОЙКИ
+    ==================================================== -->
 
     <div
       id="setup"
       class="setup"
     >
+
+      <!-- ФИО -->
 
       <div class="field">
 
@@ -480,6 +543,77 @@
       </div>
 
 
+      <!-- ДУ -->
+
+      <div class="field">
+
+        <label for="du">
+          ДУ прибора
+        </label>
+
+        <select id="du">
+
+          <option value="">
+            — Выберите ДУ —
+          </option>
+
+          <option value="DN15 Modbus">
+            DN15 Modbus
+          </option>
+
+          <option value="DN15 LoraWan">
+            DN15 LoraWan
+          </option>
+
+          <option value="DN20 Modbus">
+            DN20 Modbus
+          </option>
+
+          <option value="DN20 LoraWan">
+            DN20 LoraWan
+          </option>
+
+          <option value="DN25 BR">
+            DN25 BR
+          </option>
+
+          <option value="DN32 BR">
+            DN32 BR
+          </option>
+
+          <option value="DN40 BR">
+            DN40 BR
+          </option>
+
+          <option value="DN50 BR">
+            DN50 BR
+          </option>
+
+          <option value="DN50 CLI">
+            DN50 CLI
+          </option>
+
+          <option value="DN80 CLI">
+            DN80 CLI
+          </option>
+
+          <option value="DN100 CLI">
+            DN100 CLI
+          </option>
+
+          <option value="DN150 CLI">
+            DN150 CLI
+          </option>
+
+          <option value="DN200 CLI">
+            DN200 CLI
+          </option>
+
+        </select>
+
+      </div>
+
+
       <button
         id="startButton"
         onclick="startScanner()"
@@ -490,31 +624,49 @@
     </div>
 
 
-    <!-- Информация -->
+    <!-- ===================================================
+         ТЕКУЩИЙ ИСПОЛНИТЕЛЬ / ДУ
+    ==================================================== -->
 
     <div
-      id="executorInfo"
-      class="executor-info hidden"
-    ></div>
+      id="infoBox"
+      class="info-box hidden"
+    >
+
+      Исполнитель:
+      <strong id="executorInfo"></strong>
+
+      <br>
+
+      ДУ:
+      <strong id="duInfo"></strong>
+
+    </div>
 
 
-    <!-- Камера -->
+    <!-- ===================================================
+         КАМЕРА
+    ==================================================== -->
 
     <div id="reader"></div>
 
 
-    <!-- Статус -->
+    <!-- ===================================================
+         СТАТУС
+    ==================================================== -->
 
     <div
       id="status"
       class="status info"
     >
-      Введите ФИО и нажмите
-      «Начать сканирование».
+      Введите ФИО, выберите ДУ
+      и нажмите «Начать сканирование».
     </div>
 
 
-    <!-- Счётчик -->
+    <!-- ===================================================
+         СЧЁТЧИК
+    ==================================================== -->
 
     <div class="counter">
 
@@ -532,7 +684,9 @@
     </div>
 
 
-    <!-- Последний код -->
+    <!-- ===================================================
+         ПОСЛЕДНИЙ НОМЕР
+    ==================================================== -->
 
     <div
       id="last"
@@ -541,6 +695,19 @@
       Последний номер: —
     </div>
 
+
+    <!-- ===================================================
+         ОСТАНОВИТЬ КАМЕРУ
+    ==================================================== -->
+
+    <button
+      id="stopButton"
+      class="stop-button hidden"
+      onclick="stopScanner()"
+    >
+      ⏹ Остановить камеру
+    </button>
+
   </div>
 
 
@@ -548,7 +715,7 @@
 
     /* =====================================================
        НАСТРОЙКИ
-    ====================================================== */
+    ===================================================== */
 
     const PIN = "77777";
 
@@ -559,7 +726,7 @@
 
     /* =====================================================
        СОСТОЯНИЕ
-    ====================================================== */
+    ===================================================== */
 
     let scanner = null;
 
@@ -575,10 +742,12 @@
 
     let executor = "";
 
+    let du = "";
+
 
     /* =====================================================
        ELEMENTS
-    ====================================================== */
+    ===================================================== */
 
     const pinScreen =
       document.getElementById(
@@ -604,15 +773,33 @@
       );
 
 
+    const setup =
+      document.getElementById(
+        "setup"
+      );
+
+
     const executorInput =
       document.getElementById(
         "executor"
       );
 
 
-    const setup =
+    const duSelect =
       document.getElementById(
-        "setup"
+        "du"
+      );
+
+
+    const startButton =
+      document.getElementById(
+        "startButton"
+      );
+
+
+    const infoBox =
+      document.getElementById(
+        "infoBox"
       );
 
 
@@ -622,9 +809,9 @@
       );
 
 
-    const startButton =
+    const duInfo =
       document.getElementById(
-        "startButton"
+        "duInfo"
       );
 
 
@@ -646,9 +833,15 @@
       );
 
 
+    const stopButton =
+      document.getElementById(
+        "stopButton"
+      );
+
+
     /* =====================================================
        PIN
-    ====================================================== */
+    ===================================================== */
 
     function checkPin() {
 
@@ -702,7 +895,7 @@
 
     /* =====================================================
        STATUS
-    ====================================================== */
+    ===================================================== */
 
     function setStatus(
       text,
@@ -720,7 +913,7 @@
 
     /* =====================================================
        START SCANNER
-    ====================================================== */
+    ===================================================== */
 
     function startScanner() {
 
@@ -732,6 +925,12 @@
       executor =
         executorInput.value.trim();
 
+
+      du =
+        duSelect.value.trim();
+
+
+      /* Проверяем ФИО */
 
       if (!executor) {
 
@@ -746,13 +945,30 @@
       }
 
 
+      /* Проверяем ДУ */
+
+      if (!du) {
+
+        alert(
+          "Выберите ДУ прибора."
+        );
+
+        duSelect.focus();
+
+        return;
+
+      }
+
+
+      /* Проверяем библиотеку */
+
       if (
         typeof Html5Qrcode ===
         "undefined"
       ) {
 
         setStatus(
-          "Не загрузилась библиотека сканера.",
+          "Не загрузилась библиотека QR-сканера.",
           "error"
         );
 
@@ -765,13 +981,31 @@
 
       executorInput.disabled = true;
 
+      duSelect.disabled = true;
+
+
+      /* Сбрасываем счётчик */
+
+      count = 0;
+
+      counterEl.textContent =
+        "0";
+
+
+      lastEl.textContent =
+        "Последний номер: —";
+
+
+      /* Показываем информацию */
 
       executorInfo.textContent =
-        "Исполнитель: " +
         executor;
 
+      duInfo.textContent =
+        du;
 
-      executorInfo.classList.remove(
+
+      infoBox.classList.remove(
         "hidden"
       );
 
@@ -788,14 +1022,27 @@
         );
 
 
+      /*
+       * ВАЖНО:
+       *
+       * Не используем сложный
+       * qrbox с функцией.
+       *
+       * Фиксированный размер
+       * значительно стабильнее
+       * на телефонах.
+       */
+
       scanner
         .start(
 
           {
-            facingMode: "environment"
+            facingMode:
+              "environment"
           },
 
           {
+
             fps: 10,
 
             qrbox: {
@@ -809,9 +1056,13 @@
 
           onScanSuccess,
 
-          function() {
-            // Ошибки отдельных кадров
-            // игнорируем.
+          function(errorMessage) {
+
+            /*
+             * Ошибки отдельных кадров
+             * игнорируем.
+             */
+
           }
 
         )
@@ -819,6 +1070,11 @@
         .then(function() {
 
           scannerRunning = true;
+
+          stopButton.classList.remove(
+            "hidden"
+          );
+
 
           setStatus(
             "Наведите камеру на QR-код",
@@ -835,8 +1091,11 @@
 
           executorInput.disabled = false;
 
+          duSelect.disabled = false;
+
+
           setStatus(
-            "Не удалось открыть камеру: " +
+            "❌ Не удалось открыть камеру: " +
             error,
             "error"
           );
@@ -848,16 +1107,30 @@
 
     /* =====================================================
        QR FOUND
-    ====================================================== */
+    ===================================================== */
 
     function onScanSuccess(
       decodedText
     ) {
 
+      /*
+       * Пока предыдущий QR
+       * сохраняется — новый
+       * не обрабатываем.
+       */
+
       if (processing) {
         return;
       }
 
+
+      /*
+       * QR содержит ТОЛЬКО
+       * серийный номер.
+       *
+       * Поэтому ничего
+       * из него не вырезаем.
+       */
 
       const serial =
         String(
@@ -871,10 +1144,9 @@
 
 
       /*
-       * Камера может несколько раз
-       * распознать один и тот же QR.
-       *
-       * Игнорируем повтор в течение 2 секунд.
+       * Защита от повторного
+       * распознавания одного QR
+       * камерой подряд.
        */
 
       const now =
@@ -884,9 +1156,10 @@
       if (
         serial ===
           lastScannedSerial &&
-        now -
-          lastScannedTime <
-          2000
+        (
+          now -
+          lastScannedTime
+        ) < 2000
       ) {
 
         return;
@@ -911,14 +1184,16 @@
       );
 
 
-      saveSerial(serial);
+      saveSerial(
+        serial
+      );
 
     }
 
 
     /* =====================================================
-       SAVE
-    ====================================================== */
+       SAVE SERIAL
+    ===================================================== */
 
     function saveSerial(
       serial
@@ -942,6 +1217,10 @@
       let finished = false;
 
 
+      /*
+       * Таймаут
+       */
+
       const timeout =
         setTimeout(
           function() {
@@ -959,7 +1238,7 @@
 
 
             setStatus(
-              "❌ Google Sheets не ответил.",
+              "❌ Google Sheets не ответил. Проверьте интернет.",
               "error"
             );
 
@@ -967,6 +1246,10 @@
           15000
         );
 
+
+      /*
+       * Ответ Google Apps Script
+       */
 
       window[callbackName] =
         function(result) {
@@ -978,10 +1261,16 @@
 
           finished = true;
 
-          clearTimeout(timeout);
+          clearTimeout(
+            timeout
+          );
 
           cleanup();
 
+
+          /* ===============================================
+             УСПЕШНАЯ ЗАПИСЬ
+          =============================================== */
 
           if (
             result &&
@@ -990,11 +1279,12 @@
 
             /*
              * Увеличиваем счётчик
-             * только после успешной
-             * записи в Google Sheets.
+             * ТОЛЬКО после ответа
+             * сервера об успешной записи.
              */
 
             count++;
+
 
             counterEl.textContent =
               count;
@@ -1012,7 +1302,37 @@
             );
 
 
-          } else {
+          }
+
+
+          /* ===============================================
+             ДУБЛИКАТ
+          =============================================== */
+
+          else if (
+            result &&
+            result.duplicate
+          ) {
+
+            lastEl.textContent =
+              "Повтор: " +
+              result.serial;
+
+
+            setStatus(
+              "⚠️ Этот код уже есть в таблице: " +
+              result.serial,
+              "duplicate"
+            );
+
+          }
+
+
+          /* ===============================================
+             ОШИБКА
+          =============================================== */
+
+          else {
 
             setStatus(
               "❌ Ошибка: " +
@@ -1027,6 +1347,10 @@
 
           }
 
+
+          /*
+           * Разрешаем следующий QR.
+           */
 
           setTimeout(
             function() {
@@ -1052,6 +1376,10 @@
         };
 
 
+      /*
+       * Ошибка загрузки запроса
+       */
+
       script.onerror =
         function() {
 
@@ -1062,7 +1390,9 @@
 
           finished = true;
 
-          clearTimeout(timeout);
+          clearTimeout(
+            timeout
+          );
 
           cleanup();
 
@@ -1077,6 +1407,10 @@
         };
 
 
+      /*
+       * Формируем URL
+       */
+
       const url =
         API_URL +
         "?action=save" +
@@ -1088,6 +1422,10 @@
         encodeURIComponent(
           executor
         ) +
+        "&du=" +
+        encodeURIComponent(
+          du
+        ) +
         "&serial=" +
         encodeURIComponent(
           serial
@@ -1096,13 +1434,18 @@
         Date.now();
 
 
-      script.src = url;
+      script.src =
+        url;
 
 
       document.body.appendChild(
         script
       );
 
+
+      /*
+       * Очистка callback
+       */
 
       function cleanup() {
 
@@ -1122,6 +1465,88 @@
         }
 
       }
+
+    }
+
+
+    /* =====================================================
+       STOP SCANNER
+    ===================================================== */
+
+    function stopScanner() {
+
+      if (
+        !scanner ||
+        !scannerRunning
+      ) {
+
+        return;
+
+      }
+
+
+      scanner
+        .stop()
+
+        .then(function() {
+
+          scannerRunning =
+            false;
+
+
+          try {
+
+            scanner.clear();
+
+          } catch (e) {}
+
+
+          stopButton.classList.add(
+            "hidden"
+          );
+
+
+          startButton.disabled =
+            false;
+
+
+          executorInput.disabled =
+            false;
+
+
+          duSelect.disabled =
+            false;
+
+
+          setStatus(
+            "Сканирование остановлено.",
+            "info"
+          );
+
+        })
+
+        .catch(function() {
+
+          scannerRunning =
+            false;
+
+
+          stopButton.classList.add(
+            "hidden"
+          );
+
+          startButton.disabled =
+            false;
+
+
+          executorInput.disabled =
+            false;
+
+
+          duSelect.disabled =
+            false;
+
+        });
 
     }
 
