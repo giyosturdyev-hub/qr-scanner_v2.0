@@ -1,1538 +1,409 @@
-<!doctype html>
-<html lang="ru">
+const SPREADSHEET_ID = '1rxT5RskWA9KqisMx7AnrBT79KtHnY4u5_2Vnv8OrTn8';
 
-<head>
+const SHEET_NAME = '';
+const TIME_ZONE = 'Asia/Tashkent';
 
-<meta charset="utf-8">
+const HEADERS = [
+  'Дата',
+  'Исполнитель',
+  'ДУ прибора',
+  'Серийный номер',
+  'Статус'
+];
 
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1,viewport-fit=cover"
->
 
-<meta
-  name="theme-color"
-  content="#1976d2"
->
+/* =========================================================
+   API
+========================================================= */
 
-<title>Сканер серийных номеров</title>
+function doGet(e) {
 
+  const params = e && e.parameter ? e.parameter : {};
+  const callback = params.callback || '';
+  const action = params.action || '';
 
-<script
-  src="https://unpkg.com/html5-qrcode"
-  type="text/javascript"
-></script>
-
-
-<style>
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 16px;
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Arial,
-    sans-serif;
-  background: #f2f4f7;
-  color: #1f2937;
-}
-
-.app {
-  max-width: 620px;
-  margin: auto;
-}
-
-h1 {
-  text-align: center;
-  font-size: 24px;
-  margin: 8px 0 16px;
-}
-
-
-/* PIN */
-
-.pin-screen {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pin-box {
-  width: min(92vw, 420px);
-  background: #fff;
-  border-radius: 18px;
-  padding: 28px;
-  box-shadow:
-    0 4px 24px rgba(0,0,0,.10);
-  text-align: center;
-}
-
-.pin-title {
-  font-size: 23px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.pin-subtitle {
-  color: #6b7280;
-  margin-bottom: 18px;
-}
-
-.pin-input {
-  width: 100%;
-  padding: 15px;
-  border: 1px solid #d1d5db;
-  border-radius: 12px;
-  font-size: 24px;
-  text-align: center;
-  letter-spacing: 5px;
-  outline: none;
-}
-
-.pin-input:focus {
-  border-color: #1976d2;
-}
-
-.pin-error {
-  min-height: 22px;
-  margin-top: 10px;
-  color: #b42318;
-  font-size: 14px;
-}
-
-
-/* FORM */
-
-.setup {
-  background: #fff;
-  padding: 16px;
-  border-radius: 14px;
-  margin-bottom: 14px;
-}
-
-label {
-  display: block;
-  margin-bottom: 7px;
-  font-weight: 600;
-}
-
-input,
-select {
-  width: 100%;
-  padding: 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 12px;
-  font-size: 17px;
-  background: #fff;
-  outline: none;
-}
-
-input:focus,
-select:focus {
-  border-color: #1976d2;
-}
-
-.field {
-  margin-bottom: 14px;
-}
-
-
-/* CAMERA */
-
-#reader {
-  width: 100%;
-  background: #000;
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-#reader video {
-  width: 100% !important;
-  height: auto !important;
-}
-
-.status {
-  margin-top: 12px;
-  padding: 17px;
-  border-radius: 14px;
-  background: #fff;
-  text-align: center;
-  font-size: 18px;
-  line-height: 1.35;
-  min-height: 78px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.success {
-  background: #e8f7ed;
-  color: #137333;
-  font-weight: 700;
-}
-
-.duplicate {
-  background: #fff4d6;
-  color: #8a5a00;
-  font-weight: 700;
-}
-
-.error {
-  background: #fdeaea;
-  color: #b42318;
-  font-weight: 700;
-}
-
-.info {
-  color: #374151;
-}
-
-
-/* BUTTONS */
-
-button {
-  width: 100%;
-  margin-top: 12px;
-  padding: 15px;
-  border: 0;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: 600;
-  background: #1976d2;
-  color: #fff;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: .55;
-  cursor: not-allowed;
-}
-
-.danger {
-  background: #b42318;
-}
-
-
-/* STATS */
-
-.stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 15px;
-  text-align: center;
-}
-
-.card .num {
-  display: block;
-  font-size: 30px;
-  font-weight: 700;
-  margin-top: 4px;
-}
-
-
-/* LAST */
-
-.last {
-  margin-top: 10px;
-  padding: 13px;
-  background: #fff;
-  border-radius: 12px;
-  text-align: center;
-  font-size: 17px;
-  font-weight: 700;
-  word-break: break-word;
-}
-
-
-/* INFO */
-
-.info-box {
-  background: #fff;
-  border-radius: 12px;
-  padding: 13px;
-  margin-bottom: 12px;
-  text-align: center;
-}
-
-.info-box strong {
-  display: block;
-  font-size: 17px;
-  margin-top: 4px;
-}
-
-.hint {
-  margin-top: 10px;
-  text-align: center;
-  color: #6b7280;
-  font-size: 13px;
-}
-
-.hidden {
-  display: none !important;
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<!-- =====================================================
-     PIN
-===================================================== -->
-
-<div
-  id="pinScreen"
-  class="pin-screen"
->
-
-  <div class="pin-box">
-
-    <div class="pin-title">
-      🔐 Доступ к сканеру
-    </div>
-
-    <div class="pin-subtitle">
-      Введите PIN-код
-    </div>
-
-    <input
-      id="pinInput"
-      class="pin-input"
-      type="password"
-      inputmode="numeric"
-      maxlength="5"
-      autocomplete="off"
-      placeholder="•••••"
-    >
-
-    <button
-      onclick="checkPin()"
-    >
-      Войти
-    </button>
-
-    <div
-      id="pinError"
-      class="pin-error"
-    ></div>
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     MAIN
-===================================================== -->
-
-<div
-  id="scannerApp"
-  class="app hidden"
->
-
-  <h1>
-    Сканер серийных номеров
-  </h1>
-
-
-  <!-- SETUP -->
-
-  <div
-    id="setupBlock"
-    class="setup"
-  >
-
-    <div class="field">
-
-      <label for="executor">
-        ФИО исполнителя
-      </label>
-
-      <input
-        id="executor"
-        type="text"
-        autocomplete="name"
-        placeholder="Например: Иван Иванов"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label for="du">
-        ДУ прибора
-      </label>
-
-      <select id="du">
-
-        <option value="">
-          — Выберите ДУ —
-        </option>
-
-        <option value="DN15 Modbus">
-          DN15 Modbus
-        </option>
-
-        <option value="DN15 LoraWan">
-          DN15 LoraWan
-        </option>
-
-        <option value="DN20 Modbus">
-          DN20 Modbus
-        </option>
-
-        <option value="DN20 LoraWan">
-          DN20 LoraWan
-        </option>
-
-        <option value="DN25 BR">
-          DN25 BR
-        </option>
-
-        <option value="DN32 BR">
-          DN32 BR
-        </option>
-
-        <option value="DN40 BR">
-          DN40 BR
-        </option>
-
-        <option value="DN50 BR">
-          DN50 BR
-        </option>
-
-        <option value="DN50 CLI">
-          DN50 CLI
-        </option>
-
-        <option value="DN80 CLI">
-          DN80 CLI
-        </option>
-
-        <option value="DN100 CLI">
-          DN100 CLI
-        </option>
-
-        <option value="DN150 CLI">
-          DN150 CLI
-        </option>
-
-        <option value="DN200 CLI">
-          DN200 CLI
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <button
-      id="startBtn"
-      onclick="startScanner()"
-    >
-      📷 Начать сканирование
-    </button>
-
-  </div>
-
-
-  <!-- SCANNER -->
-
-  <div
-    id="scannerBlock"
-    class="hidden"
-  >
-
-    <div class="info-box">
-
-      ДУ прибора
-
-      <strong id="currentDu">
-        —
-      </strong>
-
-    </div>
-
-
-    <div class="info-box">
-
-      Исполнитель
-
-      <strong id="currentExecutor">
-        —
-      </strong>
-
-    </div>
-
-
-    <div class="info-box">
-
-      Дата
-
-      <strong id="currentDate">
-        —
-      </strong>
-
-    </div>
-
-
-    <div id="reader"></div>
-
-
-    <div
-      id="status"
-      class="status info"
-    >
-      Наведите камеру на QR-код
-    </div>
-
-
-    <div class="stats">
-
-      <div class="card">
-
-        Отсканировано
-
-        <span
-          id="count"
-          class="num"
-        >
-          0
-        </span>
-
-      </div>
-
-
-      <div class="card">
-
-        Повторов
-
-        <span
-          id="dupes"
-          class="num"
-        >
-          0
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <div
-      id="last"
-      class="last"
-    >
-      Последний номер: —
-    </div>
-
-
-    <button
-      class="danger"
-      onclick="closeScanner()"
-    >
-      ⏹ Завершить
-    </button>
-
-
-    <div class="hint">
-
-      Каждый серийный номер записывается
-      в Google Sheets только один раз.
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<script>
-
-
-/* =====================================================
-   НАСТРОЙКИ
-===================================================== */
-
-const PIN = "77777";
-
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbxiZia7qBQmlgRQTm9eRX7qmRmczYimSoltss3URIbodkp5ZGPLO-Htl_7pVqAaqPPUaA/exec";
-
-
-/* =====================================================
-   СОСТОЯНИЕ
-===================================================== */
-
-let scanner = null;
-
-let scanning = false;
-
-let processing = false;
-
-let count = 0;
-
-let dupes = 0;
-
-let lastScannedSerial = "";
-
-let lastScannedAt = 0;
-
-let audioContext = null;
-
-let currentExecutor = "";
-
-let currentDu = "";
-
-let currentDate = "";
-
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const pinScreen =
-  document.getElementById("pinScreen");
-
-const scannerApp =
-  document.getElementById("scannerApp");
-
-const pinInput =
-  document.getElementById("pinInput");
-
-const pinError =
-  document.getElementById("pinError");
-
-const executorInput =
-  document.getElementById("executor");
-
-const duSelect =
-  document.getElementById("du");
-
-const setupBlock =
-  document.getElementById("setupBlock");
-
-const scannerBlock =
-  document.getElementById("scannerBlock");
-
-const startBtn =
-  document.getElementById("startBtn");
-
-const statusEl =
-  document.getElementById("status");
-
-const countEl =
-  document.getElementById("count");
-
-const dupesEl =
-  document.getElementById("dupes");
-
-const lastEl =
-  document.getElementById("last");
-
-const currentDuEl =
-  document.getElementById("currentDu");
-
-const currentExecutorEl =
-  document.getElementById("currentExecutor");
-
-const currentDateEl =
-  document.getElementById("currentDate");
-
-
-/* =====================================================
-   PIN
-===================================================== */
-
-function checkPin() {
-
-  const value =
-    pinInput.value.trim();
-
-  if (value === PIN) {
-
-    pinScreen.classList.add("hidden");
-
-    scannerApp.classList.remove("hidden");
-
-    pinError.textContent = "";
-
-    pinInput.value = "";
-
-    executorInput.focus();
-
-  } else {
-
-    pinError.textContent =
-      "Неверный PIN-код";
-
-    pinInput.value = "";
-
-    pinInput.focus();
-
+  if (action === 'save') {
+    return saveSerial(params, callback);
   }
 
-}
-
-
-pinInput.addEventListener(
-  "keydown",
-  function(e) {
-
-    if (e.key === "Enter") {
-      checkPin();
-    }
-
-  }
-);
-
-
-/* =====================================================
-   ESC
-===================================================== */
-
-function esc(value) {
-
-  return String(value)
-
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-}
-
-
-/* =====================================================
-   STATUS
-===================================================== */
-
-function setStatus(text, cls) {
-
-  statusEl.className =
-    "status " + cls;
-
-  statusEl.innerHTML =
-    text;
-
-}
-
-
-/* =====================================================
-   QR TEXT
-=====================================================
-
-   ВАЖНО:
-
-   QR содержит ТОЛЬКО серийный номер.
-
-   Поэтому мы НЕ ищем "SN",
-   не режем строку и не преобразуем
-   содержимое QR.
-
-===================================================== */
-
-function extractSerial(decodedText) {
-
-  return String(decodedText || "")
-    .trim()
-    .replace(/\s+/g, " ");
-
-}
-
-
-/* =====================================================
-   SOUND
-===================================================== */
-
-function beep(success) {
-
-  try {
-
-    if (!audioContext) {
-
-      audioContext =
-        new (
-          window.AudioContext ||
-          window.webkitAudioContext
-        )();
-
-    }
-
-    if (
-      audioContext.state === "suspended"
-    ) {
-
-      audioContext.resume();
-
-    }
-
-
-    const oscillator =
-      audioContext.createOscillator();
-
-    const gain =
-      audioContext.createGain();
-
-
-    oscillator.connect(gain);
-
-    gain.connect(
-      audioContext.destination
-    );
-
-
-    oscillator.frequency.value =
-      success ? 880 : 330;
-
-    oscillator.type = "sine";
-
-
-    const now =
-      audioContext.currentTime;
-
-
-    gain.gain.setValueAtTime(
-      0.001,
-      now
-    );
-
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.18,
-      now + 0.01
-    );
-
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      now + (
-        success ? 0.13 : 0.25
-      )
-    );
-
-
-    oscillator.start(now);
-
-    oscillator.stop(
-      now + (
-        success ? 0.14 : 0.26
-      )
-    );
-
-  } catch (e) {}
-
-}
-
-
-/* =====================================================
-   START SCANNER
-===================================================== */
-
-function startScanner() {
-
-  if (scanning) {
-    return;
-  }
-
-
-  const executor =
-    executorInput.value.trim();
-
-  const du =
-    duSelect.value.trim();
-
-
-  if (!executor) {
-
-    alert(
-      "Введите ФИО исполнителя."
-    );
-
-    executorInput.focus();
-
-    return;
-
-  }
-
-
-  if (!du) {
-
-    alert(
-      "Выберите ДУ прибора."
-    );
-
-    duSelect.focus();
-
-    return;
-
-  }
-
-
-  currentExecutor =
-    executor;
-
-  currentDu =
-    du;
-
-
-  const now =
-    new Date();
-
-
-  currentDate =
-    String(now.getDate()).padStart(2, "0") +
-    "." +
-    String(now.getMonth() + 1).padStart(2, "0") +
-    "." +
-    now.getFullYear();
-
-
-  currentDuEl.textContent =
-    currentDu;
-
-  currentExecutorEl.textContent =
-    currentExecutor;
-
-  currentDateEl.textContent =
-    currentDate;
-
-
-  count = 0;
-
-  dupes = 0;
-
-  lastScannedSerial = "";
-
-  lastScannedAt = 0;
-
-
-  countEl.textContent =
-    "0";
-
-  dupesEl.textContent =
-    "0";
-
-  lastEl.textContent =
-    "Последний номер: —";
-
-
-  setupBlock.classList.add(
-    "hidden"
-  );
-
-  scannerBlock.classList.remove(
-    "hidden"
-  );
-
-
-  startBtn.disabled = true;
-
-  processing = false;
-
-
-  setStatus(
-    "📷 Запрашиваем доступ к камере…",
-    "info"
-  );
-
-
-  try {
-
-    audioContext =
-      new (
-        window.AudioContext ||
-        window.webkitAudioContext
-      )();
-
-  } catch (e) {}
-
-
-  scanner =
-    new Html5Qrcode(
-      "reader"
-    );
-
-
-  scanning = true;
-
-
-  scanner.start(
-
-    {
-      facingMode: {
-        ideal: "environment"
-      }
-    },
-
-    {
-      fps: 10,
-
-      qrbox: {
-        width: 250,
-        height: 250
-      },
-
-      aspectRatio: 1.0,
-
-      disableFlip: false
-
-    },
-
-    onScanSuccess,
-
-    function(errorMessage) {
-      // Ошибки отдельных кадров игнорируем.
-    }
-
-  )
-
-  .then(function() {
-
-    setStatus(
-      "Наведите камеру на QR-код",
-      "info"
-    );
-
-  })
-
-  .catch(function(error) {
-
-    scanning = false;
-
-    startBtn.disabled = false;
-
-    setStatus(
-      "❌ Не удалось открыть камеру.<br>" +
-      "<small>" +
-      esc(error) +
-      "</small>",
-      "error"
-    );
-
+  return sendJsonp(callback, {
+    success: true,
+    message: 'QR Scanner API работает'
   });
-
 }
 
 
-/* =====================================================
-   QR FOUND
-===================================================== */
+/* =========================================================
+   СОХРАНЕНИЕ СЕРИЙНОГО НОМЕРА
+========================================================= */
 
-function onScanSuccess(decodedText) {
+function saveSerial(params, callback) {
 
-  if (processing) {
-    return;
-  }
-
-
-  const serial =
-    extractSerial(decodedText);
-
+  const serial = normalizeSerial(params.serial);
+  const executor = normalizeText(params.executor);
+  const du = normalizeText(params.du);
 
   if (!serial) {
-    return;
+    return sendJsonp(callback, {
+      success: false,
+      message: 'Серийный номер не передан'
+    });
+  }
+
+  if (!executor) {
+    return sendJsonp(callback, {
+      success: false,
+      message: 'Не указан исполнитель'
+    });
+  }
+
+  if (!du) {
+    return sendJsonp(callback, {
+      success: false,
+      message: 'Не указано ДУ прибора'
+    });
   }
 
 
-  const now =
-    Date.now();
+  const lock = LockService.getScriptLock();
 
+  try {
 
-  /*
-   * Камера может несколько раз подряд
-   * сообщить об одном и том же QR.
-   */
+    lock.waitLock(10000);
 
-  if (
-    serial === lastScannedSerial &&
-    now - lastScannedAt < 2500
-  ) {
+    const sheet = getSheet();
 
-    return;
+    ensureHeaders(sheet);
 
-  }
+    const today = getToday();
 
 
-  processing = true;
+    /* =====================================================
+       ПРОВЕРКА ДУБЛИКАТА
+       
+       Серийный номер должен быть уникальным
+       во всей таблице.
+    ===================================================== */
 
-  lastScannedSerial =
-    serial;
+    const lastRow = sheet.getLastRow();
 
-  lastScannedAt =
-    now;
+    if (lastRow >= 2) {
 
+      const values = sheet
+        .getRange(
+          2,
+          1,
+          lastRow - 1,
+          HEADERS.length
+        )
+        .getValues();
 
-  setStatus(
-    "⏳ Сохраняем<br><b>" +
-    esc(serial) +
-    "</b>",
-    "info"
-  );
 
+      for (let i = 0; i < values.length; i++) {
 
-  saveSerial(serial);
+        const existingSerial =
+          normalizeSerial(values[i][3]);
 
-}
 
+        if (existingSerial === serial) {
 
-/* =====================================================
-   SAVE TO GOOGLE SHEETS
-===================================================== */
+          const duplicateRow = i + 2;
 
-function saveSerial(serial) {
+          const duplicateDate =
+            sheet
+              .getRange(duplicateRow, 1)
+              .getDisplayValue();
 
-  callApi(
+          const duplicateExecutor =
+            sheet
+              .getRange(duplicateRow, 2)
+              .getDisplayValue();
 
-    "save",
+          const duplicateDu =
+            sheet
+              .getRange(duplicateRow, 3)
+              .getDisplayValue();
 
-    {
 
-      serial:
-        serial,
+          return sendJsonp(callback, {
 
-      executor:
-        currentExecutor,
+            success: false,
 
-      du:
-        currentDu
+            duplicate: true,
 
-    },
+            serial: serial,
 
-    function(r) {
+            message:
+              'Этот серийный номер уже есть в таблице.' +
+              '<br>Дата: ' +
+              duplicateDate +
+              '<br>Исполнитель: ' +
+              duplicateExecutor +
+              '<br>ДУ: ' +
+              duplicateDu
 
+          });
 
-      /* ================================================
-         ДОБАВЛЕНО
-      ================================================= */
-
-      if (
-        r &&
-        r.success
-      ) {
-
-        count =
-          Number(r.count || 0);
-
-
-        countEl.textContent =
-          count;
-
-
-        lastEl.textContent =
-          "Последний номер: " +
-          r.serial;
-
-
-        setStatus(
-          "🟢 ДОБАВЛЕНО<br>" +
-          "<b>" +
-          esc(r.serial) +
-          "</b>",
-          "success"
-        );
-
-
-        beep(true);
-
-
-        setTimeout(
-          function() {
-
-            processing = false;
-
-            setStatus(
-              "Наведите на следующий QR-код",
-              "info"
-            );
-
-          },
-          700
-        );
-
-
-        return;
-
-      }
-
-
-      /* ================================================
-         ДУБЛИКАТ
-      ================================================= */
-
-      if (
-        r &&
-        r.duplicate
-      ) {
-
-        dupes++;
-
-        dupesEl.textContent =
-          dupes;
-
-
-        lastEl.textContent =
-          "Повтор: " +
-          (
-            r.serial ||
-            serial
-          );
-
-
-        setStatus(
-          "⚠️ ПОВТОР<br>" +
-          "<b>" +
-          esc(
-            r.serial ||
-            serial
-          ) +
-          "</b><br>" +
-          "<small>" +
-          esc(
-            r.message ||
-            "Этот код уже есть в таблице."
-          ) +
-          "</small>",
-          "duplicate"
-        );
-
-
-        beep(false);
-
-
-        setTimeout(
-          function() {
-
-            processing = false;
-
-            setStatus(
-              "Наведите на следующий QR-код",
-              "info"
-            );
-
-          },
-          1200
-        );
-
-
-        return;
-
-      }
-
-
-      /* ================================================
-         ОШИБКА
-      ================================================= */
-
-      setStatus(
-        "❌ Ошибка<br>" +
-        "<small>" +
-        esc(
-          (r && r.message) ||
-          "Неизвестная ошибка"
-        ) +
-        "</small>",
-        "error"
-      );
-
-
-      beep(false);
-
-      processing = false;
-
-    }
-
-  );
-
-}
-
-
-/* =====================================================
-   API JSONP
-===================================================== */
-
-function callApi(
-  action,
-  params,
-  onResult
-) {
-
-  const callbackName =
-    "qrCallback_" +
-    Date.now() +
-    "_" +
-    Math.floor(
-      Math.random() * 100000
-    );
-
-
-  const script =
-    document.createElement("script");
-
-
-  let finished = false;
-
-
-  const timeout =
-    setTimeout(
-      function() {
-
-        if (finished) {
-          return;
         }
 
-        finished = true;
-
-        cleanup();
-
-        onResult({
-
-          success: false,
-
-          message:
-            "Нет ответа от Google Sheets. " +
-            "Проверьте интернет."
-
-        });
-
-      },
-      15000
-    );
-
-
-  window[callbackName] =
-    function(result) {
-
-      if (finished) {
-        return;
       }
-
-      finished = true;
-
-      clearTimeout(timeout);
-
-      cleanup();
-
-      onResult(result);
-
-    };
-
-
-  script.onerror =
-    function() {
-
-      if (finished) {
-        return;
-      }
-
-      finished = true;
-
-      clearTimeout(timeout);
-
-      cleanup();
-
-      onResult({
-
-        success: false,
-
-        message:
-          "Не удалось связаться " +
-          "с Google Sheets."
-
-      });
-
-    };
-
-
-  let url =
-    API_URL +
-    "?action=" +
-    encodeURIComponent(action) +
-    "&callback=" +
-    encodeURIComponent(callbackName) +
-    "&t=" +
-    Date.now();
-
-
-  Object.keys(params || {})
-    .forEach(
-      function(key) {
-
-        url +=
-          "&" +
-          encodeURIComponent(key) +
-          "=" +
-          encodeURIComponent(
-            params[key]
-          );
-
-      }
-    );
-
-
-  script.src =
-    url;
-
-
-  document.body.appendChild(
-    script
-  );
-
-
-  function cleanup() {
-
-    delete window[
-      callbackName
-    ];
-
-
-    if (
-      script.parentNode
-    ) {
-
-      script.parentNode.removeChild(
-        script
-      );
 
     }
+
+
+    /* =====================================================
+       ДОБАВЛЯЕМ ЗАПИСЬ
+    ===================================================== */
+
+    sheet.appendRow([
+
+      today,
+
+      executor,
+
+      du,
+
+      serial,
+
+      'OK'
+
+    ]);
+
+
+    /* =====================================================
+       ОТВЕТ
+    ===================================================== */
+
+    return sendJsonp(callback, {
+
+      success: true,
+
+      serial: serial,
+
+      date: today,
+
+      executor: executor,
+
+      du: du,
+
+      message: 'Серийный номер добавлен'
+
+    });
+
+
+  } catch (error) {
+
+    return sendJsonp(callback, {
+
+      success: false,
+
+      message: error.toString()
+
+    });
+
+
+  } finally {
+
+    try {
+      lock.releaseLock();
+    } catch (e) {}
 
   }
 
 }
 
 
-/* =====================================================
-   CLOSE
-===================================================== */
+/* =========================================================
+   ПОЛУЧЕНИЕ ТАБЛИЦЫ
+========================================================= */
 
-function closeScanner() {
+function getSheet() {
 
-  stopScanner();
-
-
-  scanning = false;
-
-  processing = false;
+  const spreadsheet =
+    SpreadsheetApp.openById(
+      SPREADSHEET_ID
+    );
 
 
-  currentExecutor = "";
+  if (SHEET_NAME) {
 
-  currentDu = "";
-
-  currentDate = "";
-
-
-  count = 0;
-
-  dupes = 0;
+    const sheet =
+      spreadsheet.getSheetByName(
+        SHEET_NAME
+      );
 
 
-  countEl.textContent =
-    "0";
+    if (!sheet) {
 
-  dupesEl.textContent =
-    "0";
+      throw new Error(
+        'Лист "' +
+        SHEET_NAME +
+        '" не найден'
+      );
 
+    }
 
-  lastEl.textContent =
-    "Последний номер: —";
+    return sheet;
 
-
-  currentDuEl.textContent =
-    "—";
-
-  currentExecutorEl.textContent =
-    "—";
-
-  currentDateEl.textContent =
-    "—";
+  }
 
 
-  setupBlock.classList.remove(
-    "hidden"
-  );
-
-  scannerBlock.classList.add(
-    "hidden"
-  );
-
-
-  setStatus(
-    "Наведите камеру на QR-код",
-    "info"
-  );
+  return spreadsheet.getSheets()[0];
 
 }
 
 
-/* =====================================================
-   STOP CAMERA
-===================================================== */
+/* =========================================================
+   ЗАГОЛОВКИ
+========================================================= */
 
-function stopScanner() {
+function ensureHeaders(sheet) {
 
-  if (
-    !scanner ||
-    !scanning
-  ) {
+  if (sheet.getLastRow() === 0) {
+
+    sheet
+      .getRange(
+        1,
+        1,
+        1,
+        HEADERS.length
+      )
+      .setValues([HEADERS]);
 
     return;
 
   }
 
 
-  scanner
-    .stop()
+  const firstRow =
+    sheet
+      .getRange(
+        1,
+        1,
+        1,
+        HEADERS.length
+      )
+      .getValues()[0];
 
-    .then(
-      function() {
 
-        scanning = false;
+  let correct = true;
 
-        try {
 
-          scanner.clear();
+  for (
+    let i = 0;
+    i < HEADERS.length;
+    i++
+  ) {
 
-        } catch (e) {}
+    if (
+      String(firstRow[i]).trim() !==
+      HEADERS[i]
+    ) {
 
-        scanner = null;
+      correct = false;
+      break;
 
-      }
-    )
+    }
 
-    .catch(
-      function() {
+  }
 
-        scanning = false;
 
-        scanner = null;
+  if (!correct) {
 
-      }
-    );
+    sheet
+      .getRange(
+        1,
+        1,
+        1,
+        HEADERS.length
+      )
+      .setValues([HEADERS]);
+
+  }
 
 }
 
-</script>
 
-</body>
-</html>
+/* =========================================================
+   ДАТА
+========================================================= */
+
+function getToday() {
+
+  return Utilities.formatDate(
+
+    new Date(),
+
+    TIME_ZONE,
+
+    'dd.MM.yyyy'
+
+  );
+
+}
+
+
+/* =========================================================
+   ТЕКСТ
+========================================================= */
+
+function normalizeText(value) {
+
+  return String(value || '')
+    .trim()
+    .replace(/\s+/g, ' ');
+
+}
+
+
+/* =========================================================
+   СЕРИЙНЫЙ НОМЕР
+========================================================= */
+
+function normalizeSerial(value) {
+
+  return String(value || '')
+    .trim()
+    .replace(/\s+/g, ' ');
+
+}
+
+
+/* =========================================================
+   JSONP
+========================================================= */
+
+function sendJsonp(callback, data) {
+
+  if (
+    !callback ||
+    !/^[A-Za-z_$][0-9A-Za-z_$]*$/.test(callback)
+  ) {
+
+    return ContentService
+      .createTextOutput(
+        JSON.stringify(data)
+      )
+      .setMimeType(
+        ContentService.MimeType.JSON
+      );
+
+  }
+
+
+  return ContentService
+
+    .createTextOutput(
+
+      callback +
+      '(' +
+      JSON.stringify(data) +
+      ');'
+
+    )
+
+    .setMimeType(
+      ContentService.MimeType.JAVASCRIPT
+    );
+
+}
