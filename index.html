@@ -1,450 +1,451 @@
 <!doctype html>
-
 <html lang="ru">
 
 <head>
 
-  <meta charset="utf-8">
+<meta charset="utf-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width,initial-scale=1,viewport-fit=cover"
-  >
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+>
 
-  <meta
-    name="theme-color"
-    content="#1976d2"
-  >
+<meta
+  name="theme-color"
+  content="#1976d2"
+>
 
-  <title>
-    Сканер серийных номеров
-  </title>
+<title>Сканер серийных номеров</title>
 
 
-  <!-- Библиотека QR-сканера -->
+<script
+  src="https://unpkg.com/html5-qrcode"
+  type="text/javascript"
+></script>
 
-  <script
-    src="https://unpkg.com/html5-qrcode"
-    type="text/javascript"
-  ></script>
 
+<style>
 
-  <style>
+* {
+  box-sizing: border-box;
+}
 
-    * {
-      box-sizing: border-box;
-    }
 
+body {
 
-    body {
+  margin: 0;
 
-      margin: 0;
+  padding: 16px;
 
-      padding: 16px;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
 
-      background: #f2f4f7;
+  background: #f2f4f7;
 
-      color: #1f2937;
+  color: #1f2937;
 
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
+}
 
-    }
 
+.app {
 
-    .app {
+  max-width: 620px;
 
-      width: 100%;
+  margin: auto;
 
-      max-width: 600px;
+}
 
-      margin: 0 auto;
 
-    }
+h1 {
 
+  text-align: center;
 
-    h1 {
+  font-size: 25px;
 
-      text-align: center;
+  margin: 7px 0 18px;
 
-      font-size: 24px;
+}
 
-      margin:
-        8px 0 18px;
 
-    }
+/* PIN */
 
+.pin-screen {
 
-    .hidden {
-      display: none !important;
-    }
+  min-height: 100vh;
 
+  display: flex;
 
-    /* =====================================================
-       PIN
-    ====================================================== */
+  align-items: center;
 
-    .pin-screen {
+  justify-content: center;
 
-      min-height: 100vh;
+}
 
-      display: flex;
 
-      align-items: center;
+.pin-box {
 
-      justify-content: center;
+  width: min(92vw, 420px);
 
-    }
+  background: #fff;
 
+  border-radius: 18px;
 
-    .pin-box {
+  padding: 28px;
 
-      width: min(92vw, 420px);
+  box-shadow:
+    0 4px 24px rgba(0,0,0,.10);
 
-      background: #ffffff;
+  text-align: center;
 
-      border-radius: 18px;
+}
 
-      padding: 28px;
 
-      box-shadow:
-        0 4px 24px
-        rgba(0,0,0,.10);
+.pin-title {
 
-      text-align: center;
+  font-size: 23px;
 
-    }
+  font-weight: 700;
 
+  margin-bottom: 8px;
 
-    .pin-title {
+}
 
-      font-size: 23px;
 
-      font-weight: 700;
+.pin-subtitle {
 
-      margin-bottom: 8px;
+  color: #6b7280;
 
-    }
+  margin-bottom: 18px;
 
+}
 
-    .pin-subtitle {
 
-      color: #6b7280;
+.pin-input {
 
-      margin-bottom: 18px;
+  width: 100%;
 
-    }
+  padding: 15px;
 
+  border:
+    1px solid #d1d5db;
 
-    .pin-input {
+  border-radius: 12px;
 
-      width: 100%;
+  font-size: 24px;
 
-      padding: 15px;
+  text-align: center;
 
-      border:
-        1px solid #d1d5db;
+  letter-spacing: 5px;
 
-      border-radius: 12px;
+  outline: none;
 
-      font-size: 24px;
+}
 
-      text-align: center;
 
-      letter-spacing: 5px;
+.pin-input:focus {
 
-      outline: none;
+  border-color: #1976d2;
 
-    }
+}
 
 
-    /* =====================================================
-       FORM
-    ====================================================== */
+.pin-error {
 
-    .setup {
+  min-height: 22px;
 
-      background: #ffffff;
+  margin-top: 10px;
 
-      padding: 16px;
+  color: #b42318;
 
-      border-radius: 14px;
+  font-size: 14px;
 
-      margin-bottom: 14px;
+}
 
-    }
 
+/* FORM */
 
-    .field {
+.setup {
 
-      margin-bottom: 15px;
+  background: #fff;
 
-    }
+  padding: 16px;
 
+  border-radius: 14px;
 
-    label {
+  margin-bottom: 14px;
 
-      display: block;
+}
 
-      margin-bottom: 7px;
 
-      font-weight: 600;
+.field {
 
-    }
+  margin-bottom: 14px;
 
+}
 
-    input,
-    select {
 
-      width: 100%;
+.field:last-child {
 
-      padding: 14px;
+  margin-bottom: 0;
 
-      border:
-        1px solid #d1d5db;
+}
 
-      border-radius: 12px;
 
-      font-size: 17px;
+label {
 
-      background: #ffffff;
+  display: block;
 
-      outline: none;
+  margin-bottom: 7px;
 
-    }
+  font-weight: 600;
 
+}
 
-    button {
 
-      width: 100%;
+input,
+select {
 
-      margin-top: 12px;
+  width: 100%;
 
-      padding: 15px;
+  padding: 14px;
 
-      border: 0;
+  border:
+    1px solid #d1d5db;
 
-      border-radius: 12px;
+  border-radius: 12px;
 
-      font-size: 18px;
+  font-size: 17px;
 
-      font-weight: 600;
+  background: #fff;
 
-      background: #1976d2;
+  outline: none;
 
-      color: #ffffff;
+}
 
-      cursor: pointer;
 
-    }
+input:focus,
+select:focus {
 
+  border-color: #1976d2;
 
-    button:disabled {
+}
 
-      opacity: .55;
 
-      cursor: not-allowed;
+/* CAMERA */
 
-    }
+#reader {
 
+  width: 100%;
 
-    /* =====================================================
-       INFO
-    ====================================================== */
+  background: #000;
 
-    .info-box {
+  border-radius: 14px;
 
-      margin-bottom: 12px;
+  overflow: hidden;
 
-      padding: 12px;
+}
 
-      background: #ffffff;
 
-      border-radius: 12px;
+.status {
 
-      text-align: center;
+  margin-top: 12px;
 
-      line-height: 1.5;
+  padding: 17px;
 
-    }
+  border-radius: 14px;
 
+  background: #fff;
 
-    .info-box strong {
+  text-align: center;
 
-      font-size: 16px;
+  font-size: 18px;
 
-    }
+  line-height: 1.4;
 
+  min-height: 78px;
 
-    /* =====================================================
-       CAMERA
-    ====================================================== */
+  display: flex;
 
-    #reader {
+  align-items: center;
 
-      width: 100%;
+  justify-content: center;
 
-      background: #000000;
+}
 
-      border-radius: 14px;
 
-      overflow: hidden;
+.success {
 
-    }
+  background: #e8f7ed;
 
+  color: #137333;
 
-    /* =====================================================
-       STATUS
-    ====================================================== */
+  font-weight: 700;
 
-    .status {
+}
 
-      margin-top: 12px;
 
-      padding: 16px;
+.duplicate {
 
-      border-radius: 14px;
+  background: #fff4d6;
 
-      background: #ffffff;
+  color: #8a5a00;
 
-      text-align: center;
+  font-weight: 700;
 
-      font-size: 18px;
+}
 
-      line-height: 1.4;
 
-      min-height: 68px;
+.error {
 
-      display: flex;
+  background: #fdeaea;
 
-      align-items: center;
+  color: #b42318;
 
-      justify-content: center;
+  font-weight: 700;
 
-    }
+}
 
 
-    .info {
+.info {
 
-      color: #374151;
+  color: #374151;
 
-    }
+}
 
 
-    .success {
+/* BUTTONS */
 
-      background: #e8f7ed;
+button {
 
-      color: #137333;
+  width: 100%;
 
-      font-weight: 700;
+  margin-top: 12px;
 
-    }
+  padding: 15px;
 
+  border: 0;
 
-    .error {
+  border-radius: 12px;
 
-      background: #fdeaea;
+  font-size: 18px;
 
-      color: #b42318;
+  font-weight: 600;
 
-      font-weight: 700;
+  background: #1976d2;
 
-    }
+  color: #fff;
 
+  cursor: pointer;
 
-    .duplicate {
+}
 
-      background: #fff4d6;
 
-      color: #8a5a00;
+button:disabled {
 
-      font-weight: 700;
+  opacity: .55;
 
-    }
+  cursor: not-allowed;
 
+}
 
-    /* =====================================================
-       COUNTER
-    ====================================================== */
 
-    .counter {
+.danger {
 
-      margin-top: 12px;
+  background: #b42318;
 
-      padding: 18px;
+}
 
-      background: #ffffff;
 
-      border-radius: 14px;
+/* STATS */
 
-      text-align: center;
+.stats {
 
-    }
+  display: grid;
 
+  grid-template-columns: 1fr 1fr;
 
-    .counter-title {
+  gap: 10px;
 
-      color: #6b7280;
+  margin-top: 12px;
 
-      font-size: 15px;
+}
 
-    }
 
+.card {
 
-    .counter-number {
+  background: #fff;
 
-      display: block;
+  border-radius: 12px;
 
-      margin-top: 4px;
+  padding: 13px;
 
-      font-size: 42px;
+  text-align: center;
 
-      font-weight: 700;
+}
 
-    }
 
+.card .num {
 
-    /* =====================================================
-       LAST
-    ====================================================== */
+  display: block;
 
-    .last {
+  font-size: 30px;
 
-      margin-top: 12px;
+  font-weight: 700;
 
-      padding: 14px;
+  margin-top: 3px;
 
-      background: #ffffff;
+}
 
-      border-radius: 14px;
 
-      text-align: center;
+/* LAST */
 
-      font-size: 18px;
+.last {
 
-      font-weight: 600;
+  margin-top: 10px;
 
-      word-break: break-word;
+  padding: 12px;
 
-    }
+  background: #fff;
 
+  border-radius: 12px;
 
-    /* =====================================================
-       STOP
-    ====================================================== */
+  text-align: center;
 
-    .stop-button {
+  font-size: 17px;
 
-      background: #b42318;
+  font-weight: 700;
 
-    }
+  word-break: break-word;
 
-  </style>
+}
+
+
+/* HINT */
+
+.hint {
+
+  margin-top: 10px;
+
+  text-align: center;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+}
+
+
+.hidden {
+
+  display: none !important;
+
+}
+
+</style>
 
 </head>
 
@@ -452,241 +453,216 @@
 <body>
 
 
-  <!-- =====================================================
-       PIN SCREEN
-  ====================================================== -->
+<!-- =====================================================
+     PIN
+===================================================== -->
+
+<div
+  id="pinScreen"
+  class="pin-screen"
+>
+
+  <div class="pin-box">
+
+    <div class="pin-title">
+      🔐 Доступ к сканеру
+    </div>
+
+    <div class="pin-subtitle">
+      Введите PIN-код
+    </div>
+
+    <input
+      id="pinInput"
+      class="pin-input"
+      type="password"
+      inputmode="numeric"
+      maxlength="5"
+      autocomplete="off"
+      placeholder="•••••"
+    >
+
+    <button
+      onclick="checkPin()"
+    >
+      Войти
+    </button>
+
+    <div
+      id="pinError"
+      class="pin-error"
+    ></div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     APPLICATION
+===================================================== -->
+
+<div
+  id="scannerApp"
+  class="app hidden"
+>
+
+  <h1>
+    Сканер серийных номеров
+  </h1>
+
+
+  <!-- SETUP -->
 
   <div
-    id="pinScreen"
-    class="pin-screen"
+    id="setupBlock"
+    class="setup"
   >
 
-    <div class="pin-box">
+    <div class="field">
 
-      <div class="pin-title">
-        🔐 Доступ к сканеру
-      </div>
-
-      <div class="pin-subtitle">
-        Введите PIN-код
-      </div>
+      <label for="executor">
+        ФИО исполнителя
+      </label>
 
       <input
-        id="pinInput"
-        class="pin-input"
-        type="password"
-        inputmode="numeric"
-        maxlength="5"
-        autocomplete="off"
-        placeholder="•••••"
+        id="executor"
+        type="text"
+        autocomplete="name"
+        placeholder="Например: Иван Иванов"
       >
-
-      <button
-        id="pinButton"
-        onclick="checkPin()"
-      >
-        Войти
-      </button>
-
-      <div
-        id="pinError"
-        style="
-          min-height:22px;
-          margin-top:10px;
-          color:#b42318;
-        "
-      ></div>
 
     </div>
+
+
+    <div class="field">
+
+      <label for="du">
+        ДУ прибора
+      </label>
+
+      <select id="du">
+
+        <option value="">
+          — Выберите ДУ —
+        </option>
+
+        <option value="DN15 Modbus">
+          DN15 Modbus
+        </option>
+
+        <option value="DN15 LoraWan">
+          DN15 LoraWan
+        </option>
+
+        <option value="DN20 Modbus">
+          DN20 Modbus
+        </option>
+
+        <option value="DN20 LoraWan">
+          DN20 LoraWan
+        </option>
+
+        <option value="DN25 BR">
+          DN25 BR
+        </option>
+
+        <option value="DN32 BR">
+          DN32 BR
+        </option>
+
+        <option value="DN40 BR">
+          DN40 BR
+        </option>
+
+        <option value="DN50 BR">
+          DN50 BR
+        </option>
+
+        <option value="DN50 CLI">
+          DN50 CLI
+        </option>
+
+        <option value="DN80 CLI">
+          DN80 CLI
+        </option>
+
+        <option value="DN100 CLI">
+          DN100 CLI
+        </option>
+
+        <option value="DN150 CLI">
+          DN150 CLI
+        </option>
+
+        <option value="DN200 CLI">
+          DN200 CLI
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <button
+      id="startButton"
+      onclick="startScanning()"
+    >
+      📷 Начать сканирование
+    </button>
 
   </div>
 
 
-  <!-- =====================================================
-       MAIN APPLICATION
-  ====================================================== -->
+  <!-- SCANNER -->
 
   <div
-    id="app"
-    class="app hidden"
+    id="scannerBlock"
+    class="hidden"
   >
-
-    <h1>
-      Сканер серийных номеров
-    </h1>
-
-
-    <!-- ===================================================
-         НАСТРОЙКИ
-    ==================================================== -->
-
-    <div
-      id="setup"
-      class="setup"
-    >
-
-      <!-- ФИО -->
-
-      <div class="field">
-
-        <label for="executor">
-          ФИО исполнителя
-        </label>
-
-        <input
-          id="executor"
-          type="text"
-          autocomplete="name"
-          placeholder="Введите ФИО"
-        >
-
-      </div>
-
-
-      <!-- ДУ -->
-
-      <div class="field">
-
-        <label for="du">
-          ДУ прибора
-        </label>
-
-        <select id="du">
-
-          <option value="">
-            — Выберите ДУ —
-          </option>
-
-          <option value="DN15 Modbus">
-            DN15 Modbus
-          </option>
-
-          <option value="DN15 LoraWan">
-            DN15 LoraWan
-          </option>
-
-          <option value="DN20 Modbus">
-            DN20 Modbus
-          </option>
-
-          <option value="DN20 LoraWan">
-            DN20 LoraWan
-          </option>
-
-          <option value="DN25 BR">
-            DN25 BR
-          </option>
-
-          <option value="DN32 BR">
-            DN32 BR
-          </option>
-
-          <option value="DN40 BR">
-            DN40 BR
-          </option>
-
-          <option value="DN50 BR">
-            DN50 BR
-          </option>
-
-          <option value="DN50 CLI">
-            DN50 CLI
-          </option>
-
-          <option value="DN80 CLI">
-            DN80 CLI
-          </option>
-
-          <option value="DN100 CLI">
-            DN100 CLI
-          </option>
-
-          <option value="DN150 CLI">
-            DN150 CLI
-          </option>
-
-          <option value="DN200 CLI">
-            DN200 CLI
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <button
-        id="startButton"
-        onclick="startScanner()"
-      >
-        📷 Начать сканирование
-      </button>
-
-    </div>
-
-
-    <!-- ===================================================
-         ТЕКУЩИЙ ИСПОЛНИТЕЛЬ / ДУ
-    ==================================================== -->
-
-    <div
-      id="infoBox"
-      class="info-box hidden"
-    >
-
-      Исполнитель:
-      <strong id="executorInfo"></strong>
-
-      <br>
-
-      ДУ:
-      <strong id="duInfo"></strong>
-
-    </div>
-
-
-    <!-- ===================================================
-         КАМЕРА
-    ==================================================== -->
 
     <div id="reader"></div>
 
-
-    <!-- ===================================================
-         СТАТУС
-    ==================================================== -->
 
     <div
       id="status"
       class="status info"
     >
-      Введите ФИО, выберите ДУ
-      и нажмите «Начать сканирование».
+      Наведите камеру на QR-код
     </div>
 
 
-    <!-- ===================================================
-         СЧЁТЧИК
-    ==================================================== -->
+    <div class="stats">
 
-    <div class="counter">
+      <div class="card">
 
-      <div class="counter-title">
-        Отсканировано кодов
+        Отсканировано
+
+        <span
+          id="count"
+          class="num"
+        >
+          0
+        </span>
+
       </div>
 
-      <span
-        id="counter"
-        class="counter-number"
-      >
-        0
-      </span>
+
+      <div class="card">
+
+        Повторов
+
+        <span
+          id="duplicates"
+          class="num"
+        >
+          0
+        </span>
+
+      </div>
 
     </div>
 
-
-    <!-- ===================================================
-         ПОСЛЕДНИЙ НОМЕР
-    ==================================================== -->
 
     <div
       id="last"
@@ -696,861 +672,998 @@
     </div>
 
 
-    <!-- ===================================================
-         ОСТАНОВИТЬ КАМЕРУ
-    ==================================================== -->
-
     <button
       id="stopButton"
-      class="stop-button hidden"
-      onclick="stopScanner()"
+      class="danger"
+      onclick="stopScanning()"
     >
-      ⏹ Остановить камеру
+      ⏹ Остановить сканирование
     </button>
+
+
+    <div class="hint">
+
+      Каждый уникальный QR записывается
+      в Google Sheets.
+
+      Повторные QR не записываются.
+
+    </div>
 
   </div>
 
-
-  <script>
-
-    /* =====================================================
-       НАСТРОЙКИ
-    ===================================================== */
-
-    const PIN = "77777";
+</div>
 
 
-    const API_URL =
-      "https://script.google.com/macros/s/AKfycbxiZia7qBQmlgRQTm9eRX7qmRmczYimSoltss3URIbodkp5ZGPLO-Htl_7pVqAaqPPUaA/exec";
+<script>
 
 
-    /* =====================================================
-       СОСТОЯНИЕ
-    ===================================================== */
+/* =====================================================
+   НАСТРОЙКИ
+===================================================== */
 
-    let scanner = null;
-
-    let scannerRunning = false;
-
-    let processing = false;
-
-    let count = 0;
-
-    let lastScannedSerial = "";
-
-    let lastScannedTime = 0;
-
-    let executor = "";
-
-    let du = "";
+const PIN = "77777";
 
 
-    /* =====================================================
-       ELEMENTS
-    ===================================================== */
-
-    const pinScreen =
-      document.getElementById(
-        "pinScreen"
-      );
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbxiZia7qBQmlgRQTm9eRX7qmRmczYimSoltss3URIbodkp5ZGPLO-Htl_7pVqAaqPPUaA/exec";
 
 
-    const pinInput =
-      document.getElementById(
-        "pinInput"
-      );
+/* =====================================================
+   СОСТОЯНИЕ
+===================================================== */
+
+let scanner = null;
+
+let scanning = false;
+
+let processing = false;
+
+let count = 0;
+
+let duplicates = 0;
+
+let lastSerial = "";
+
+let lastScanTime = 0;
+
+let audioContext = null;
 
 
-    const pinError =
-      document.getElementById(
-        "pinError"
-      );
+let currentExecutor = "";
+
+let currentDu = "";
 
 
-    const app =
-      document.getElementById(
-        "app"
-      );
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const pinScreen =
+  document.getElementById("pinScreen");
 
 
-    const setup =
-      document.getElementById(
-        "setup"
-      );
+const scannerApp =
+  document.getElementById("scannerApp");
 
 
-    const executorInput =
-      document.getElementById(
-        "executor"
-      );
+const pinInput =
+  document.getElementById("pinInput");
 
 
-    const duSelect =
-      document.getElementById(
-        "du"
-      );
+const pinError =
+  document.getElementById("pinError");
 
 
-    const startButton =
-      document.getElementById(
-        "startButton"
-      );
+const executorInput =
+  document.getElementById("executor");
 
 
-    const infoBox =
-      document.getElementById(
-        "infoBox"
-      );
+const duSelect =
+  document.getElementById("du");
 
 
-    const executorInfo =
-      document.getElementById(
-        "executorInfo"
-      );
+const setupBlock =
+  document.getElementById("setupBlock");
 
 
-    const duInfo =
-      document.getElementById(
-        "duInfo"
-      );
+const scannerBlock =
+  document.getElementById("scannerBlock");
 
 
-    const statusEl =
-      document.getElementById(
-        "status"
-      );
+const statusEl =
+  document.getElementById("status");
 
 
-    const counterEl =
-      document.getElementById(
-        "counter"
-      );
+const countEl =
+  document.getElementById("count");
 
 
-    const lastEl =
-      document.getElementById(
-        "last"
-      );
+const duplicatesEl =
+  document.getElementById("duplicates");
 
 
-    const stopButton =
-      document.getElementById(
-        "stopButton"
-      );
+const lastEl =
+  document.getElementById("last");
 
 
-    /* =====================================================
-       PIN
-    ===================================================== */
+/* =====================================================
+   PIN
+===================================================== */
 
-    function checkPin() {
+function checkPin() {
 
-      const value =
-        pinInput.value.trim();
+  const pin =
+    pinInput.value.trim();
 
 
-      if (value === PIN) {
+  if (pin === PIN) {
 
-        pinScreen.classList.add(
-          "hidden"
-        );
+    pinScreen.classList.add("hidden");
 
-        app.classList.remove(
-          "hidden"
-        );
+    scannerApp.classList.remove("hidden");
 
-        pinError.textContent = "";
+    pinError.textContent = "";
 
-        executorInput.focus();
+    pinInput.value = "";
 
-      } else {
+    executorInput.focus();
 
-        pinError.textContent =
-          "Неверный PIN-код";
+  } else {
 
-        pinInput.value = "";
+    pinError.textContent =
+      "Неверный PIN-код.";
 
-        pinInput.focus();
+    pinInput.value = "";
 
-      }
+    pinInput.focus();
+
+  }
+
+}
+
+
+pinInput.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (event.key === "Enter") {
+
+      checkPin();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   SAFE HTML
+===================================================== */
+
+function esc(value) {
+
+  return String(value)
+
+    .replace(/&/g, "&amp;")
+
+    .replace(/</g, "&lt;")
+
+    .replace(/>/g, "&gt;")
+
+    .replace(/"/g, "&quot;")
+
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+function setStatus(
+  text,
+  className
+) {
+
+  statusEl.className =
+    "status " +
+    className;
+
+  statusEl.innerHTML =
+    text;
+
+}
+
+
+/* =====================================================
+   QR TEXT
+===================================================== */
+
+function extractSerial(text) {
+
+  const serial =
+    String(text || "")
+      .trim();
+
+
+  if (!serial) {
+
+    return "";
+
+  }
+
+
+  /*
+   * QR содержит только серийный номер.
+   *
+   * Поэтому НЕ пытаемся искать SN,
+   * Serial Number и т.д.
+   *
+   * Берём содержимое QR целиком.
+   */
+
+  return serial;
+
+}
+
+
+/* =====================================================
+   SOUND
+===================================================== */
+
+function beep(success) {
+
+  try {
+
+    if (!audioContext) {
+
+      audioContext =
+        new (
+          window.AudioContext ||
+          window.webkitAudioContext
+        )();
 
     }
 
 
-    pinInput.addEventListener(
-      "keydown",
-      function(event) {
+    if (
+      audioContext.state ===
+      "suspended"
+    ) {
 
-        if (
-          event.key === "Enter"
-        ) {
+      audioContext.resume();
 
-          checkPin();
+    }
 
-        }
 
-      }
+    const oscillator =
+      audioContext.createOscillator();
+
+
+    const gain =
+      audioContext.createGain();
+
+
+    oscillator.connect(gain);
+
+    gain.connect(
+      audioContext.destination
     );
 
 
-    /* =====================================================
-       STATUS
-    ===================================================== */
-
-    function setStatus(
-      text,
-      type
-    ) {
-
-      statusEl.className =
-        "status " + type;
-
-      statusEl.textContent =
-        text;
-
-    }
+    oscillator.frequency.value =
+      success
+        ? 880
+        : 330;
 
 
-    /* =====================================================
-       START SCANNER
-    ===================================================== */
+    oscillator.type =
+      "sine";
 
-    function startScanner() {
 
-      if (scannerRunning) {
-        return;
+    const now =
+      audioContext.currentTime;
+
+
+    gain.gain.setValueAtTime(
+      0.001,
+      now
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.18,
+      now + 0.01
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      now +
+      (
+        success
+          ? 0.13
+          : 0.25
+      )
+    );
+
+
+    oscillator.start(now);
+
+
+    oscillator.stop(
+      now +
+      (
+        success
+          ? 0.14
+          : 0.26
+      )
+    );
+
+  } catch (error) {}
+
+}
+
+
+/* =====================================================
+   START SCANNING
+===================================================== */
+
+function startScanning() {
+
+  const executor =
+    executorInput.value.trim();
+
+
+  const du =
+    duSelect.value.trim();
+
+
+  if (!executor) {
+
+    alert(
+      "Введите ФИО исполнителя."
+    );
+
+    executorInput.focus();
+
+    return;
+
+  }
+
+
+  if (!du) {
+
+    alert(
+      "Выберите ДУ прибора."
+    );
+
+    duSelect.focus();
+
+    return;
+
+  }
+
+
+  currentExecutor =
+    executor;
+
+
+  currentDu =
+    du;
+
+
+  count = 0;
+
+  duplicates = 0;
+
+  lastSerial = "";
+
+  lastScanTime = 0;
+
+
+  countEl.textContent =
+    "0";
+
+
+  duplicatesEl.textContent =
+    "0";
+
+
+  lastEl.textContent =
+    "Последний номер: —";
+
+
+  setupBlock.classList.add(
+    "hidden"
+  );
+
+
+  scannerBlock.classList.remove(
+    "hidden"
+  );
+
+
+  setStatus(
+    "Запрашиваем доступ к камере…",
+    "info"
+  );
+
+
+  processing = false;
+
+
+  try {
+
+    audioContext =
+      new (
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
+
+  } catch (error) {}
+
+
+  scanner =
+    new Html5Qrcode(
+      "reader"
+    );
+
+
+  scanner
+    .start(
+
+      {
+        facingMode:
+          "environment"
+      },
+
+      {
+        fps: 10,
+
+        qrbox: function(
+          width,
+          height
+        ) {
+
+          const size =
+            Math.floor(
+              Math.min(
+                width,
+                height
+              ) * 0.70
+            );
+
+
+          return {
+
+            width:
+              Math.max(
+                180,
+                size
+              ),
+
+            height:
+              Math.max(
+                180,
+                size
+              )
+
+          };
+
+        }
+
+      },
+
+      onScanSuccess,
+
+      function(errorMessage) {
+
+        /*
+         * html5-qrcode постоянно
+         * сообщает ошибки поиска QR.
+         *
+         * Здесь ничего делать не нужно.
+         */
+
       }
 
+    )
 
-      executor =
-        executorInput.value.trim();
+    .then(function() {
 
+      scanning = true;
 
-      du =
-        duSelect.value.trim();
+      setStatus(
+        "Наведите камеру на QR-код",
+        "info"
+      );
 
+    })
 
-      /* Проверяем ФИО */
+    .catch(function(error) {
 
-      if (!executor) {
+      scanning = false;
 
-        alert(
-          "Введите ФИО исполнителя."
-        );
+      setStatus(
+        "❌ Не удалось открыть камеру.<br>" +
+        "<small>" +
+        esc(error) +
+        "</small>",
+        "error"
+      );
 
-        executorInput.focus();
-
-        return;
-
-      }
-
-
-      /* Проверяем ДУ */
-
-      if (!du) {
-
-        alert(
-          "Выберите ДУ прибора."
-        );
-
-        duSelect.focus();
-
-        return;
-
-      }
-
-
-      /* Проверяем библиотеку */
-
-      if (
-        typeof Html5Qrcode ===
-        "undefined"
-      ) {
-
-        setStatus(
-          "Не загрузилась библиотека QR-сканера.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      startButton.disabled = true;
-
-      executorInput.disabled = true;
-
-      duSelect.disabled = true;
-
-
-      /* Сбрасываем счётчик */
-
-      count = 0;
-
-      counterEl.textContent =
-        "0";
-
-
-      lastEl.textContent =
-        "Последний номер: —";
-
-
-      /* Показываем информацию */
-
-      executorInfo.textContent =
-        executor;
-
-      duInfo.textContent =
-        du;
-
-
-      infoBox.classList.remove(
+      setupBlock.classList.remove(
         "hidden"
       );
 
-
-      setStatus(
-        "Запрашиваем доступ к камере…",
-        "info"
+      scannerBlock.classList.add(
+        "hidden"
       );
 
+    });
 
-      scanner =
-        new Html5Qrcode(
-          "reader"
-        );
+}
 
 
-      /*
-       * ВАЖНО:
-       *
-       * Не используем сложный
-       * qrbox с функцией.
-       *
-       * Фиксированный размер
-       * значительно стабильнее
-       * на телефонах.
-       */
+/* =====================================================
+   QR FOUND
+===================================================== */
 
-      scanner
-        .start(
+function onScanSuccess(
+  decodedText
+) {
 
-          {
-            facingMode:
-              "environment"
-          },
+  if (processing) {
 
-          {
+    return;
 
-            fps: 10,
-
-            qrbox: {
-              width: 250,
-              height: 250
-            },
-
-            aspectRatio: 1.0
-
-          },
-
-          onScanSuccess,
-
-          function(errorMessage) {
-
-            /*
-             * Ошибки отдельных кадров
-             * игнорируем.
-             */
-
-          }
-
-        )
-
-        .then(function() {
-
-          scannerRunning = true;
-
-          stopButton.classList.remove(
-            "hidden"
-          );
+  }
 
 
-          setStatus(
-            "Наведите камеру на QR-код",
-            "info"
-          );
-
-        })
-
-        .catch(function(error) {
-
-          scannerRunning = false;
-
-          startButton.disabled = false;
-
-          executorInput.disabled = false;
-
-          duSelect.disabled = false;
-
-
-          setStatus(
-            "❌ Не удалось открыть камеру: " +
-            error,
-            "error"
-          );
-
-        });
-
-    }
-
-
-    /* =====================================================
-       QR FOUND
-    ===================================================== */
-
-    function onScanSuccess(
+  const serial =
+    extractSerial(
       decodedText
-    ) {
-
-      /*
-       * Пока предыдущий QR
-       * сохраняется — новый
-       * не обрабатываем.
-       */
-
-      if (processing) {
-        return;
-      }
+    );
 
 
-      /*
-       * QR содержит ТОЛЬКО
-       * серийный номер.
-       *
-       * Поэтому ничего
-       * из него не вырезаем.
-       */
+  if (!serial) {
 
-      const serial =
-        String(
-          decodedText || ""
-        ).trim();
+    return;
+
+  }
 
 
-      if (!serial) {
-        return;
-      }
+  const now =
+    Date.now();
 
 
-      /*
-       * Защита от повторного
-       * распознавания одного QR
-       * камерой подряд.
-       */
+  /*
+   * Защита от одного QR,
+   * который камера может распознать
+   * несколько раз подряд.
+   */
 
-      const now =
-        Date.now();
+  if (
 
+    serial === lastSerial &&
+
+    now - lastScanTime < 2500
+
+  ) {
+
+    return;
+
+  }
+
+
+  processing = true;
+
+  lastSerial = serial;
+
+  lastScanTime = now;
+
+
+  setStatus(
+    "⏳ Сохраняем...<br><b>" +
+    esc(serial) +
+    "</b>",
+    "info"
+  );
+
+
+  saveSerial(serial);
+
+}
+
+
+/* =====================================================
+   SAVE
+===================================================== */
+
+function saveSerial(serial) {
+
+  callApi(
+
+    "save",
+
+    {
+
+      serial:
+        serial,
+
+      executor:
+        currentExecutor,
+
+      du:
+        currentDu
+
+    },
+
+    function(result) {
+
+
+      /* =================================================
+         SUCCESS
+      ================================================= */
 
       if (
-        serial ===
-          lastScannedSerial &&
-        (
-          now -
-          lastScannedTime
-        ) < 2000
+        result &&
+        result.success
       ) {
 
-        return;
-
-      }
-
-
-      lastScannedSerial =
-        serial;
-
-      lastScannedTime =
-        now;
+        count =
+          Number(
+            result.count || 0
+          );
 
 
-      processing = true;
+        countEl.textContent =
+          count;
 
 
-      setStatus(
-        "⏳ Записываем: " +
-        serial,
-        "info"
-      );
+        lastEl.textContent =
+          "Последний номер: " +
+          result.serial;
 
 
-      saveSerial(
-        serial
-      );
-
-    }
-
-
-    /* =====================================================
-       SAVE SERIAL
-    ===================================================== */
-
-    function saveSerial(
-      serial
-    ) {
-
-      const callbackName =
-        "qrCallback_" +
-        Date.now() +
-        "_" +
-        Math.floor(
-          Math.random() * 100000
+        setStatus(
+          "🟢 ДОБАВЛЕНО<br><b>" +
+          esc(result.serial) +
+          "</b>",
+          "success"
         );
 
 
-      const script =
-        document.createElement(
-          "script"
-        );
+        beep(true);
 
 
-      let finished = false;
-
-
-      /*
-       * Таймаут
-       */
-
-      const timeout =
         setTimeout(
           function() {
-
-            if (finished) {
-              return;
-            }
-
-
-            finished = true;
-
-            cleanup();
 
             processing = false;
 
 
             setStatus(
-              "❌ Google Sheets не ответил. Проверьте интернет.",
-              "error"
+              "Наведите камеру на следующий QR-код",
+              "info"
             );
 
           },
-          15000
+          700
         );
 
-
-      /*
-       * Ответ Google Apps Script
-       */
-
-      window[callbackName] =
-        function(result) {
-
-          if (finished) {
-            return;
-          }
-
-
-          finished = true;
-
-          clearTimeout(
-            timeout
-          );
-
-          cleanup();
-
-
-          /* ===============================================
-             УСПЕШНАЯ ЗАПИСЬ
-          =============================================== */
-
-          if (
-            result &&
-            result.success
-          ) {
-
-            /*
-             * Увеличиваем счётчик
-             * ТОЛЬКО после ответа
-             * сервера об успешной записи.
-             */
-
-            count++;
-
-
-            counterEl.textContent =
-              count;
-
-
-            lastEl.textContent =
-              "Последний номер: " +
-              result.serial;
-
-
-            setStatus(
-              "🟢 Записано: " +
-              result.serial,
-              "success"
-            );
-
-
-          }
-
-
-          /* ===============================================
-             ДУБЛИКАТ
-          =============================================== */
-
-          else if (
-            result &&
-            result.duplicate
-          ) {
-
-            lastEl.textContent =
-              "Повтор: " +
-              result.serial;
-
-
-            setStatus(
-              "⚠️ Этот код уже есть в таблице: " +
-              result.serial,
-              "duplicate"
-            );
-
-          }
-
-
-          /* ===============================================
-             ОШИБКА
-          =============================================== */
-
-          else {
-
-            setStatus(
-              "❌ Ошибка: " +
-              (
-                result &&
-                result.message
-                  ? result.message
-                  : "Неизвестная ошибка"
-              ),
-              "error"
-            );
-
-          }
-
-
-          /*
-           * Разрешаем следующий QR.
-           */
-
-          setTimeout(
-            function() {
-
-              processing = false;
-
-
-              if (
-                scannerRunning
-              ) {
-
-                setStatus(
-                  "Наведите на следующий QR-код",
-                  "info"
-                );
-
-              }
-
-            },
-            800
-          );
-
-        };
-
-
-      /*
-       * Ошибка загрузки запроса
-       */
-
-      script.onerror =
-        function() {
-
-          if (finished) {
-            return;
-          }
-
-
-          finished = true;
-
-          clearTimeout(
-            timeout
-          );
-
-          cleanup();
-
-          processing = false;
-
-
-          setStatus(
-            "❌ Не удалось связаться с Google Sheets.",
-            "error"
-          );
-
-        };
-
-
-      /*
-       * Формируем URL
-       */
-
-      const url =
-        API_URL +
-        "?action=save" +
-        "&callback=" +
-        encodeURIComponent(
-          callbackName
-        ) +
-        "&executor=" +
-        encodeURIComponent(
-          executor
-        ) +
-        "&du=" +
-        encodeURIComponent(
-          du
-        ) +
-        "&serial=" +
-        encodeURIComponent(
-          serial
-        ) +
-        "&t=" +
-        Date.now();
-
-
-      script.src =
-        url;
-
-
-      document.body.appendChild(
-        script
-      );
-
-
-      /*
-       * Очистка callback
-       */
-
-      function cleanup() {
-
-        delete window[
-          callbackName
-        ];
-
-
-        if (
-          script.parentNode
-        ) {
-
-          script.parentNode.removeChild(
-            script
-          );
-
-        }
-
-      }
-
-    }
-
-
-    /* =====================================================
-       STOP SCANNER
-    ===================================================== */
-
-    function stopScanner() {
-
-      if (
-        !scanner ||
-        !scannerRunning
-      ) {
 
         return;
 
       }
 
 
-      scanner
-        .stop()
+      /* =================================================
+         DUPLICATE
+      ================================================= */
 
-        .then(function() {
+      if (
+        result &&
+        result.duplicate
+      ) {
 
-          scannerRunning =
-            false;
+        duplicates++;
 
-
-          try {
-
-            scanner.clear();
-
-          } catch (e) {}
+        duplicatesEl.textContent =
+          duplicates;
 
 
-          stopButton.classList.add(
-            "hidden"
+        lastEl.textContent =
+          "Повтор: " +
+          (
+            result.serial ||
+            serial
           );
 
 
-          startButton.disabled =
-            false;
+        setStatus(
+          "⚠️ ПОВТОР<br><b>" +
+          esc(
+            result.serial ||
+            serial
+          ) +
+          "</b>",
+          "duplicate"
+        );
 
 
-          executorInput.disabled =
-            false;
+        beep(false);
 
 
-          duSelect.disabled =
-            false;
+        setTimeout(
+          function() {
+
+            processing = false;
 
 
-          setStatus(
-            "Сканирование остановлено.",
-            "info"
-          );
+            setStatus(
+              "Наведите камеру на следующий QR-код",
+              "info"
+            );
 
-        })
-
-        .catch(function() {
-
-          scannerRunning =
-            false;
+          },
+          1000
+        );
 
 
-          stopButton.classList.add(
-            "hidden"
-          );
+        return;
 
-          startButton.disabled =
-            false;
+      }
 
 
-          executorInput.disabled =
-            false;
+      /* =================================================
+         ERROR
+      ================================================= */
+
+      setStatus(
+        "❌ Ошибка<br><small>" +
+        esc(
+          (
+            result &&
+            result.message
+          ) ||
+          "Неизвестная ошибка"
+        ) +
+        "</small>",
+        "error"
+      );
 
 
-          duSelect.disabled =
-            false;
+      beep(false);
 
-        });
+
+      processing = false;
 
     }
 
-  </script>
+  );
+
+}
+
+
+/* =====================================================
+   API
+===================================================== */
+
+function callApi(
+  action,
+  params,
+  callback
+) {
+
+  const callbackName =
+    "qrCallback_" +
+    Date.now() +
+    "_" +
+    Math.floor(
+      Math.random() * 100000
+    );
+
+
+  const script =
+    document.createElement(
+      "script"
+    );
+
+
+  let finished = false;
+
+
+  const timeout =
+    setTimeout(
+      function() {
+
+        if (finished) {
+
+          return;
+
+        }
+
+
+        finished = true;
+
+        cleanup();
+
+
+        callback({
+
+          success: false,
+
+          message:
+            "Нет ответа от Google Apps Script."
+
+        });
+
+      },
+      15000
+    );
+
+
+  window[callbackName] =
+    function(result) {
+
+      if (finished) {
+
+        return;
+
+      }
+
+
+      finished = true;
+
+      clearTimeout(timeout);
+
+      cleanup();
+
+      callback(result);
+
+    };
+
+
+  script.onerror =
+    function() {
+
+      if (finished) {
+
+        return;
+
+      }
+
+
+      finished = true;
+
+      clearTimeout(timeout);
+
+      cleanup();
+
+
+      callback({
+
+        success: false,
+
+        message:
+          "Не удалось связаться с Google Apps Script."
+
+      });
+
+    };
+
+
+  let url =
+    API_URL +
+    "?action=" +
+    encodeURIComponent(action) +
+    "&callback=" +
+    encodeURIComponent(callbackName) +
+    "&t=" +
+    Date.now();
+
+
+  Object.keys(
+    params || {}
+  ).forEach(
+    function(key) {
+
+      url +=
+        "&" +
+        encodeURIComponent(key) +
+        "=" +
+        encodeURIComponent(
+          params[key]
+        );
+
+    }
+  );
+
+
+  script.src =
+    url;
+
+
+  document.body.appendChild(
+    script
+  );
+
+
+  function cleanup() {
+
+    delete window[
+      callbackName
+    ];
+
+
+    if (
+      script.parentNode
+    ) {
+
+      script.parentNode.removeChild(
+        script
+      );
+
+    }
+
+  }
+
+}
+
+
+/* =====================================================
+   STOP SCANNING
+===================================================== */
+
+function stopScanning() {
+
+  if (
+    scanner &&
+    scanning
+  ) {
+
+    scanner
+      .stop()
+      .then(function() {
+
+        scanning = false;
+
+
+        try {
+
+          scanner.clear();
+
+        } catch (error) {}
+
+      })
+      .catch(function() {
+
+        scanning = false;
+
+      });
+
+  }
+
+
+  setupBlock.classList.remove(
+    "hidden"
+  );
+
+
+  scannerBlock.classList.add(
+    "hidden"
+  );
+
+
+  processing = false;
+
+}
+
+</script>
 
 </body>
 
