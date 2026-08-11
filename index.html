@@ -768,28 +768,48 @@ function setStatus(html, cls) {
    SERIAL NORMALIZATION
 ========================================================= */
 
+```javascript
 function extractSerial(text) {
 
-  const raw =
-    String(text || "")
-      .trim()
-      .replace(/\s+/g, " ");
 
-  const m =
-    raw.match(
-      /\bSN\s*[:#-]?\s*([A-Za-z0-9_-]+)/i
-    );
+  const raw = String(text || "")
+    .trim()
+    .replace(/\s+/g, " ");
 
-  if (m) {
-
-    return "SN " + m[1];
-
+  if (!raw) {
+    return "";
   }
 
+  /*
+   * Ищем SN в QR-коде.
+   *
+   * Поддерживаются варианты:
+   * SN 123456
+   * SN:123456
+   * SN-123456
+   * SN#123456
+   * Serial Number: 123456
+   */
+
+  let m = raw.match(
+    /\b(?:SN|S\/N|SERIAL\s*NUMBER|SERIAL)\s*[:#=\-]?\s*([A-Za-z0-9][A-Za-z0-9._\/+\-]*)/i
+  );
+
+  if (m && m[1]) {
+    return "SN " + m[1].trim();
+  }
+
+  /*
+   * Если обозначения SN нет,
+   * используем весь содержимый QR-кода.
+   *
+   * Это важно: разные QR больше не будут
+   * случайно превращаться в один и тот же SN.
+   */
+
   return raw;
-
 }
-
+```
 
 /* =========================================================
    SOUND
